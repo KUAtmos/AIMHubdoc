@@ -1,0 +1,12 @@
+*.log
+*.aux
+*.dvi
+*.lof
+*.bbl
+*.blg
+*.toc
+*.out
+*.lot
+*.gz
+fig/*.emf
+fig/*.wmf
