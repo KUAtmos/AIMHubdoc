@@ -371,6 +371,7 @@ CTL & CTL & Ruminat livestock &  & CTL \\\cline{1-3}\cline{5-5}
 RMK & RMK & Raw milk &  & RMK \\\hline 
 OTH\_L & OAP, WOL, FSH & Non ruminat livestock, other livestock and fishery & 05 & OAP, WOL, FSH \\\hline 
 FRS & FRS & Forestry & 02 & FRS \\\hline 
+AFS &  & Afforestation & 02 & - \\\hline 
 COA & COA & Coal mining & 101, 102 & COA \\\hline 
 OIL & OIL & Oil mining & 111, 112 (related to oil extraction), 103 & OIL \\\hline 
 GAS & GAS & Gas mining & 111, 112 (related to gas extraction) & GAS \\\hline 
@@ -4016,6 +4017,7 @@ Assumption132 & /inc\_prog/030\_aeei\_adjustment.gms & Total energy consumption 
 
 The model assumes some years that change the conditions such as new biofuel and hydrogen industries appear and so on.
 Here is a list of such year (Table \ref{tab:LisSpecYear}) and these are specified in "/inc\_prog/030\_SpecYear.gms".
+Note that these assumptions are overwritten if they are specidied in socioeconomic, climate policy or IAV assumptions.
 
 \begin{tabularx}{\textwidth}{|
 p{\dimexpr 0.201\linewidth-2\tabcolsep-2\arrayrulewidth}|
@@ -4043,6 +4045,10 @@ Years & Switch & Contents \\\hline
 2019 & YIEAEBend & IEA energy balance prameter calibration ends \\\hline 
 2017 & YEneSysModstart & Energy system model prameter calibration starts \\\hline 
 2100 & YEneSysModend & Energy system model prameter calibration ends \\\hline 
+2023 & DACstart & direct air capture starts \\\hline 
+2023 & STOstart & atomospheric co2 storage starts \\\hline 
+2030 & BaUNoCCLoadYear & BaU_NoCC data load year. Default is 2030 but in some cases, it would be needed to changed (e.g. regionally fragmented policy scenarios that have variations in 2050's condition) \\\hline 
+2015 & affstartyear & Afforestation starting year \\\hline 
 \end{tabularx}
 
 \section{\label{sec:InpData}Input data}
