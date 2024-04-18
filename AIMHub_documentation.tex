@@ -3655,7 +3655,8 @@ SSP2\_CGEG & CGE global results are again fed into the simulation so that carbon
 \end{tabularx}
 \subsection{\label{subsec:CliPolAssLis}Climate policy assumption list}
 
-''CLP'' specifies the climate policy assumptions. Currently a list of default assumtpions is shown in table \ref{tab:CliPolAssList}.
+''CLP'' specifies the climate policy assumptions. Currently a list of default assumtpions is shown in table \ref{tab:CliPolAssList}. 
+For the global constraint scenarios, CarBud should be also specified as carbon budget from 2020 to 2100.
 
 
 \begin{tabularx}{\textwidth}{|
@@ -3666,17 +3667,19 @@ p{\dimexpr 0.65\linewidth-2\tabcolsep-\arrayrulewidth}|}
 \hline 
 Scenario\_name & Global/ National & Description \\\hline 
 BaU & Global/ National & Without any climate policy. This scenario should be run firstly to calibrate TFP. \\\hline 
+EmiTar2030\_CONT1 & Global & 2030 emissions target is met and then continue equivalent effort. \\\hline 
+EmiTar2030EtOn & Global &2030 emissions target is met with the emissions trading and then continue equivalent effort. \\\hline 
+EmiTar2030\_CONT3 & Global &2030 emissions target is met and then continue equivalent effort using carbon tax. \\\hline 
+2020NDC\_NZE & Global &for 2030 updated NDC is met and then goes net zero in 2050 based on current announcement. \\\hline  
+2020NDC\_NZE2030EtOn & Global &for 2030 updated NDC is met and then goes net zero in 2050 for all countries with emissions trading. \\\hline
+2020NDC\_NZECO & Global &for 2030 updated NDC is met and then using global constraint goes net zero in 2050. \\\hline 
+2020NDC\_NZEAll & Global &for 2030 updated NDC is met and then goes net zero in 2050 for all countries with emissions trading. \\\hline 
+CO2F1\_CACN & Global &global emissions constraint from 2020. \\\hline  
+CO2F1\_2025CP & Global &global emissions constraint from 2025. \\\hline 
+CO2F1\_2015INDC & Global &global emissions constraint from 2030 after INDC emissions constraint made in 2015. \\\hline 
+CO2F1\_2020NDC & Global &global emissions constraint from 2030 after updated NDC emissions constraint made in 2020. \\\hline 
 20W, 26W, 34W, 45W, 60W & Global & Stabilizing radiative forcing at 2100 roughly corresponding values. The global uniform carbon price for all sectors and GHGs start from 2015. \\\hline 
-***\_SPA\#  \newline (*** can be the radiative forcing, \# can be 1-5) & Global & Stabilizing radiative forcing at 2100 roughly corresponding values. The sectoral coverage of GHG pricing imposition, the regional variation of timing of climate policy is dependent on SPA which is described in Fujimori et al.~\cite{RN4363}. \\\hline 
-***\_SPA1  \newline (*** can be the radiative forcing) & Global & Stabilizing radiative forcing at 2100 roughly corresponding values. The global uniform carbon price for all sectors and GHGs starts from 2020. \\\hline 
-***\_SPA1CO2 (*** can be the radiative forcing) & Global & Stabilizing radiative forcing at 2100 roughly corresponding values but the actual implementation is based on cumulative carbon budget (20W=400, 26W=1000, 34W=1600). The global uniform carbon price for all sectors and GHGs starts from 2020.  \\\hline 
-***\_INDCCO2 (*** can be the radiative forcing) & Global & Stabilizing radiative forcing at 2100 roughly corresponding values but the actual implementation is based on cumulative carbon budget (20W=400, 26W=1000, 34W=1600). The global uniform carbon price for all sectors and GHGs starts from 2030. And 2020-2030 are under NDC assumption \\\hline 
-INDC \_CONT3 & Global & 2020-2030 the NDC assumtpions are applied and the same carbon price is applied thereafter. \\\hline 
-INDC \_CONT2 & Global & 2020-2030 the NDC assumtpions are applied and the same carbon price is applied thereafter. During the NDC period from 2021 to 2030, the emissions trading is available.~\cite{RN4363} \\\hline 
 CTAX100, CTAX1000 & Global/ National & Carbon price path starting from 2021 and linearly connect to 2100 by 100 or 1000\$/tCO2.  \\\hline 
-****INDC (*** is numbers) & Global & 2020-2030 the NDC assumtpions are applied and then the global uniform carbon price starts to meet cumulative carbon budget from 2011 to 2100 specified by **** GtCO2. The emissions pathways from DICE model. \\\hline 
-****CACN (*** is numbers) & Global & The global uniform carbon price starts from 2020 to meet cumulative carbon budget from 2011 to 2100 specified by **** GtCO2. The emissions pathways from DICE model. \\\hline 
-Global26WEne & Global & Global energy system model is fed into the simulation but mitigation cases. \\\hline 
 \end{tabularx}
 
 \begin{table}
