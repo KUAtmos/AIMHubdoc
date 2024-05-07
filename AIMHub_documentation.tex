@@ -3834,7 +3834,7 @@ Years & Switch & Contents \\\hline
 2100 & YEneSysModend & Energy system model prameter calibration ends \\\hline 
 2023 & DACstart & direct air capture starts \\\hline 
 2023 & STOstart & atomospheric co2 storage starts \\\hline 
-2030 & BaUNoCCLoadYear & BaU_NoCC data load year. Default is 2030 but in some cases, it would be needed to changed (e.g. regionally fragmented policy scenarios that have variations in 2050's condition) \\\hline 
+2030 & BaUNoCCLoadYear & BaU\_NoCC data load year. Default is 2030 but in some cases, it would be needed to changed (e.g. regionally fragmented policy scenarios that have variations in 2050's condition) \\\hline 
 2015 & affstartyear & Afforestation starting year \\\hline 
 \end{tabularx}
 
@@ -4378,37 +4378,37 @@ This section describes how to add hydrogen production sectors.
 \item Execution of emission.gms
 \end{itemize}
 
-\item Execution of elasticity\_set.gms
+\item Execution of ./data/AIMHubdata/elasticity/elasticity\_set.gms
 \item Execution of AIDADS\_para.gms
 \end{itemize}
 \subsection{\label{subsec:ProNonEleSec}Procedure for non-elecrticity sector}
 
 Assume that now hydrogen sector is to be added.
-\begin{enumerate}
-\item [HGC]
-\begin{enumerate}
-\item[1)]Set map file change or add
+\begin{itemize}
+\item HGC
+\begin{itemize}
+\item Set map file change or add
 
-\item/Define/activity.set
-\item[HGC]Hydrogen by coal
-\item[HGG]Hydrogen by gas
-\item[HGB]Hydrogen by biomass
-\item[HGE]Hydrogen by electricity
+\item /Define/activity.set
+      HGC Hydrogen by coal
+      HGG Hydrogen by gas
+      HGB Hydrogen by biomass
+      HGE Hydrogen by electricity
+\end{itemize}
 
-~/Define/commodity.set
-\end{enumerate}
-\end{enumerate}
-COM\_HYG
+\item COM\_HYG
+\item ~/Define/commodity.set
 \begin{itemize}
 \item /Define/ household\_commodity.set
 \item /Define/ householdc.map
 \end{itemize}
 COM\_ENE . COM\_HYG
-
 COM\_CAR . COM\_HYG
+\end{itemize}
+
 \begin{description}
 \item[1)]New program for generating the sectors
-\item[-]Copy from biofuel.gms to hydrogen.gms
+\item[-]Copy from ./inc\_prog/030\_biofuel.gms to ./inc\_prog/030\_hydrogen.gms
 \item[-]Need to be declared
 \begin{itemize}
 \item \textcolor{color-3}{A\_HYG(A)}
@@ -4418,7 +4418,7 @@ COM\_CAR . COM\_HYG
 \item hydinirate(R)
 \end{itemize}
 
-\item[]
+Demand side specification should be made in ./inc\_prog/030\_NewIndsutryCalib.gms.
 
 \subsection{\label{subsec:ElecSecCas}Electricity sector case}
 
