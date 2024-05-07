@@ -4365,22 +4365,9 @@ SQRT(ABS(SUM(R\$Map\_Ragg(R,Ragg), SUM(A\$Map\_Aagg(A,Aagg), theta(R,A,"COM\_ELY
 
 \section{\label{sec:HowAddSec}How to add sectors}
 
-This section describes how to add hydrogen production sectors.
+This section describes how to add hydrogen production sectors. This procedure can be adopted to any other sector introduction. 
+For example, introduction of artificial meat production sector has been made under the commit number  "4269dfbd6a87cd0cffe7b993166d827529b24150"  in AIMHub repository and you can refer how it has been realized by looking at this commit.
 
-\subsection{\label{subsec:EssPro}Essential procedure}
-
-
-\begin{itemize}
-\item If the sector is existing in the base year, it should be mapped to EDGAR emissions
-\begin{itemize}
-\item Using excel file
-\item Modification of mapping in Data/edgar/emission.xls
-\item Execution of emission.gms
-\end{itemize}
-
-\item Execution of ./data/AIMHubdata/elasticity/elasticity\_set.gms
-\item Execution of AIDADS\_para.gms
-\end{itemize}
 \subsection{\label{subsec:ProNonEleSec}Procedure for non-elecrticity sector}
 
 Assume that now hydrogen sector is to be added.
@@ -4452,6 +4439,22 @@ Assume that E\_WIF is to be added to an electricity sectory.
 \end{itemize}
 
 \end{itemize}
+
+\subsection{\label{subsec:EssPro}Emissions specificiation if the sector exists in base year SAM}
+
+\begin{itemize}
+\item If the sector is existing in the base year, it should be mapped to EDGAR emissions
+\begin{itemize}
+\item Using excel file
+\item Modification of mapping in Data/edgar/emission.xls
+\item Execution of emission.gms
+\end{itemize}
+
+\item Execution of ./data/AIMHubdata/elasticity/elasticity\_set.gms
+\item Execution of AIDADS\_para.gms
+\end{itemize}
+
+
 \section{\label{sec:HowAddAnaVarFinRes}How to add analytical variables to the final results or figures}
 
 
@@ -4652,7 +4655,13 @@ Then, add them into the excel file (/doc/variable\_list\_IAMC.xlsx map)
 \end{description}
 \chapter{\label{chp:ModFea}{Model features}}
 \footnote{Parts of this section may overlap with other sections.}\label{mark-11.}
-{This chapter documents a main model structure and how to implement scenario assumptions for the analysis of long-term climate mitigation taken by AIM/Hub. There are six aspects which are going to be discussed. First, macro economy, labor and population treatment are explained. Second, energy supply sectors representation is described. Energy supply sectors are one of the key elements for decarbonizing economic systems. Thrid, energy demand sectors are discussed. Forth, agrilture and land use is critically important for stringent climate mitigation policy since large bioenergy implementation combined with carbn capture and storge, and afforestation would be thought as measures which enales so-called negative emissions. Fifth, non-energy realted GHG reduction measures follow. They are mostly related to agricultrural sectors. Sixth, we discuss how to add new sectors into the CGE system.}
+This chapter documents a main model structure and how to implement scenario assumptions for the analysis of long-term climate mitigation taken by AIM/Hub. 
+There are six aspects which are going to be discussed. First, macro economy, labor and population treatment are explained. Second, energy supply sectors representation is described. 
+Energy supply sectors are one of the key elements for decarbonizing economic systems. 
+Thrid, energy demand sectors are discussed. 
+Forth, agrilture and land use is critically important for stringent climate mitigation policy since large bioenergy implementation combined with carbn capture and storge, and afforestation would be thought as measures which enales so-called negative emissions. 
+Fifth, non-energy realted GHG reduction measures follow. They are mostly related to agricultrural sectors. 
+Sixth, we discuss how to add new sectors into the CGE system.
 
 \section{\label{sec:SomTIPS-Int}{Introduction}}
 
