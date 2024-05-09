@@ -4440,6 +4440,15 @@ Assume that E\_WIF is to be added to an electricity sectory.
 
 \end{itemize}
 
+
+Moreover, for the reporting of the results, multiple locations should be reviewed.
+\begin{itemize}
+  \item ./prog/combine\_gdx1.gms
+  sector mapping allocation such as Msec(AC,Ssec), Mene_S_FC(ENE_S,AC), and Msec(AC,Ssec) should add sectors.
+  \item ./inc\_prog/040\_ene\_bal\_make.gms
+  if the newly added sector is not normal final energy consumption sectors such as energy transformation, then there should be some specifial treatment to generate energy balance table. 
+
+
 \subsection{\label{subsec:EssPro}Emissions specificiation if the sector exists in base year SAM}
 
 \begin{itemize}
