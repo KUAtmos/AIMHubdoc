@@ -417,6 +417,11 @@ DAC &  & Direct air capture &  &  \\\hline
 STO &  & Carbon storoge for DAC &  &  \\\hline
 T\_D &  & Transmission and Distribution &  &  \\\hline
 OHE	&  & Overhead of electricity including administering &  &  \\\hline
+AMT	&  & Artificial meat &  &  \\\hline
+BIC	&  & Biochar CDR &  &  \\\hline
+SOI	&  & Soil carbon CDR &  &  \\\hline
+AFS	&  & Afforestation &  &  \\\hline
+EWE	&  & Enhanced weathering CDR &  &  \\\hline
 
 \end{tabularx}
 \section{\label{sec:RegClass}Region classification}
@@ -3634,6 +3639,7 @@ CLP & BaU & CTAX, 26W, 37W, 45W, 60W etc. & Specification of climate policy. BaU
 IAV\_ass & NoCC & CC1 etc. & For the IAV analysis, climate change condition can be specified by this switch. \\\hline 
 Scenario\_name & SSP2 & SSP1-SSP5 and any & Scenario name that specifies socioeconomic assumptions. The name is freely available. Corresponding socioeconomic scenario should be specified in the prog/scenario/socioeconomic/***.gms  \\\hline 
 Enduse & on & Off & If detailed Enduse technological information is used, then turn on. It increases computational burden almost double. \\\hline 
+RunExclude & "" & Any scenarios & List of scenarios that are not run. \\\hline 
 \end{tabularx}
 
 \subsection{\label{subsec:SocAssLis}Socioeconomic assumptions list}
@@ -4447,9 +4453,10 @@ Assume that E\_WIF is to be added to an electricity sectory.
 Moreover, for the reporting of the results, multiple locations should be reviewed.
 \begin{itemize}
   \item ./prog/combine\_gdx1.gms
-  sector mapping allocation such as Msec(AC,Ssec), Mene_S_FC(ENE_S,AC), and Msec(AC,Ssec) should add sectors.
+  sector mapping allocation such as Msec(AC,Ssec), Mene\_S\_FC(ENE\_S,AC), and Msec(AC,Ssec) should add sectors.
   \item ./inc\_prog/040\_ene\_bal\_make.gms
   if the newly added sector is not normal final energy consumption sectors such as energy transformation, then there should be some specifial treatment to generate energy balance table. 
+\end{itemize}
 
 
 \subsection{\label{subsec:EssPro}Emissions specificiation if the sector exists in base year SAM}
