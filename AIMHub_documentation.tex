@@ -1378,8 +1378,8 @@ Alternatively, considering the capital turn-over, the following equation can be 
 
 \begin{center} \begin{align} \begin{autobreak}
 SHAC_{r,a,c} = 
-(1-depr_{r}-depmult_{r,c})\cdot(1+\Uplambda _{r,a,c})\cdot SHAC^{pre}_{r,a,c}/(1+VRENCAP_{r,c}) + 
-(depr_{r}+depmult_{r,c})\cdot \frac{\left(1+\Uplambda _{r,a,c}\right)\psi 2_{r,a,c}^{ac}PXAC_{r,a,c}^{\eta _{r,a,c}^{ac}}}{\sum _{ap\in A}\left(1+\Uplambda _{r,ap,c}\right)\psi 2_{r,ap,c}^{ac}PXAC_{r,ap,c}^{\eta 2_{r,ap,c}^{ac}}}
+(1-depr_{r}-depmult_{r,a,c})\cdot(1+\Uplambda _{r,a,c})\cdot SHAC^{pre}_{r,a,c}/(1+VRENCAP_{r,c}) + 
+(depr_{r}+depmult_{r,a,c})\cdot \frac{\left(1+\Uplambda _{r,a,c}\right)\psi 2_{r,a,c}^{ac}PXAC_{r,a,c}^{\eta _{r,a,c}^{ac}}}{\sum _{ap\in A}\left(1+\Uplambda _{r,ap,c}\right)\psi 2_{r,ap,c}^{ac}PXAC_{r,ap,c}^{\eta 2_{r,ap,c}^{ac}}}
 ,\,\,\,\,\forall r\in R,\,c\in (CX\cap ENE) 
 \notag \end{autobreak} \end{align}(PRD\_MATERIAL\_BAL\_SH2)\end{center}
 
@@ -1394,7 +1394,7 @@ $\Uplambda _{r,a,c}$: complementary variable for energy system information which
 
 $depr_{r}$: capital depreciation (4\%),
 
-$depmult_{r,c}$: additional capital turnover rate by commodity \textit{c}.
+$depmult_{r,a,c}$: additional capital turnover rate by commodity \textit{c}.
 \end{flushleft}
 
 \begin{flushleft}\textbf{Commodity Production and Allocation (energy commodities)}\end{flushleft}
@@ -1837,7 +1837,7 @@ $LUCHEM\_N_{r,fl}$: Land use change emissions (negative) in AEZ fl region r
 \begin{flushleft}
 $QPRMLANDT_{r,fl}$: Primary land area AEZ \textit{fl}, region \textit{r}
 
-$qfrspre_{r,fl,sprl}$: Previous year's primary land area AEZ \textit{fl}, region \textit{r}, land classification \textit{sprl}
+$qfrspre_{r,fl,sprl}$: Previous year's forest land area AEZ \textit{fl}, region \textit{r}, land classification \textit{sprl}
 
 $ecoefluc_{,fl,sprl}$: Landuse chage emission coefficient AEZ \textit{fl}, region \textit{r}, land classification \textit{sprl}
 \end{flushleft}
