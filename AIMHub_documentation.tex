@@ -883,8 +883,9 @@ The activity-specific aggregate intermediate input price shows the cost of disag
 \begin{flushleft}\textbf{Activity Revenue and Costs (Non-energy transformation sector)}\end{flushleft}
 
 
-\begin{center}$PA_{r,a}\cdot \left(1-ta_{r,a}\right)\cdot QA_{r,a}=PVAE_{r,a}\cdot QVAE_{r,a}+PINTA_{r,a}\cdot QINTA_{r,a}+PRES_{r,a}\cdot QRES_{r,a}\newline 
-  \,\,\,\,\,\,+GHGCA\_NENE_{r,a}+VRENCAP_{r,a}\cdot QA_{r,a}+\sum _{emcm\in EMCM}QRED_{r,emcm,a},\,\,\,\,\forall r\in R,\,a\in ACES$ (PVADEF)
+\begin{center}$PA_{r,a}\cdot \left(1-ta_{r,a}\right)\cdot QA_{r,a}= \newline
+  PVAE_{r,a}\cdot QVAE_{r,a}+PINTA_{r,a}\cdot QINTA_{r,a}+PRES_{r,a}\cdot QRES_{r,a}\newline 
+  \,\,\,\,\,\,+GHGCA\_NENE_{r,a}+VRENCAP_{r,a}\cdot QA_{r,a}+\sum _{emcm\in EMCM}QRED_{r,emcm,a}+COMPCOPR_{r,a}\cdot QA_{r,a},\,\,\,\,\forall r\in R,\,a\in ACES$ (PVADEF)
 \end{center}
 
 \begin{flushleft}\textbf{Activity Revenue and Costs (Energy transformation sector)}\end{flushleft}
@@ -894,7 +895,7 @@ PA_{r,a}\cdot (1-ta_{r,a})\cdot QA_{r,a}=
 PVA_{r,a}\cdot QVA_{r,a}+PINTA_{r,a}\cdot QINTA_{r,a}+
 PENE_{r,a}\cdot QENE_{r,a}+PRES_{r,a}\cdot QRES_{r,a}+
 GHGCA\_NENE_{r,a}+VRENCAP_{r,a}\cdot QA_{r,a}+
-\sum _{emcm\in EMCM}QRED_{r,emcm,a}+
+\sum _{emcm\in EMCM}QRED_{r,emcm,a}+COMPCOPR_{r,a}\cdot QA_{r,a}+
 \sum _{g,emsc}ABTC\_NCS_{r,a,g,emsc} - GHGCAFULL_{R,A}\cdot CarTaxExempt
 \,\,\,\,\,\forall r\in R,\,a\in ALEO 
 \notag \end{autobreak} (PVADEF)\end{align}\end{center}
@@ -921,6 +922,8 @@ $QENE_{r,a}$: quantity of (aggregate) energy input,
 $GHGCA\_NENE_{r,a}$: GHG emission cost related biomass burning and CCS negative emissions of activity \textit{a} in region \textit{r},
 
 $VRENCAP_{r,a}$: Rent of electricity capacity activity \textit{a} in region \textit{r},
+
+$COMPCOPR_{r,a}$: Complementary variable for operation and maintenance cost of activity \textit{a} in region \textit{r},
 
 $PRES_{r,a}$: price of resource input,
 
