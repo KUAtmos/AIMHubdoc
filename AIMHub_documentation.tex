@@ -48,7 +48,7 @@
 \definecolor{color-8}{rgb}{0.64,0.08,0.08}
 \setlongtables
 
-\title{AIM/Hub 2.3.19 Documentation}
+\title{AIM/Hub 2.3.20 Documentation}
 \author{Shinichiro Fujimori}
 
 
@@ -246,7 +246,19 @@ Computable General Equilibrium model, Social Accounting Matrix, Energy Balance T
       IEA calibration period is extended to 2019 from 2015 
       
   \item April, 2023 S. Fujimori Version 2.3.20 \\
-      New sector, agricultural residue biomass, has been introduced. 
+      New sector, agricultural residue biomass, has been introduced.
+
+  \item August, 2024 S. Fujimori Version 2.3.21 \\
+      A new sector has been added, and the shell scripts now support the
+      RunExclude option for excluding selected scenarios from a run.
+
+  \item 2025 S. Fujimori Version 2.3.22 \\
+      Sector classification documentation has been updated (LIN renamed to
+      LUM) and several sector descriptions revised.
+
+  \item January, 2026 S. Fujimori Version 2.3.23 \\
+      Documentation updated for model intercomparison projects (MIP),
+      incorporating external contributions. 
       
   \end{itemize}
 \end{quote}
@@ -3641,9 +3653,10 @@ Sr & JPN & 106 regions & Code of country if the model is used as single country 
 base\_year & 2005 & None & Base year \\\hline 
 target\_year & 2050 & 2100 & Last year of target period \\\hline 
 Start\_year & 2006 & Any from base to target year & The starting year of scenario run. Basically 2006 is preferable but for when the users check the model results and conditions in case the users encounter errors \\\hline 
-CLP & BaU & CTAX, 26W, 37W, 45W, 60W etc. & Specification of climate policy. BaU does not have any constraint on emissions nor emission price while the others have. The strength of the constraint depends on the scenarios. The emissions cap or emission price is described in the prog /scenario/emission/***.gms \\\hline 
+CLP & BaU & CTAX, 26W, 37W, 45W, 60W etc. & Specification of climate policy. BaU does not have any constraint on emissions nor emission price while the others have. The strength of the constraint depends on the scenarios. The emissions cap or emission price is described in the scenario/emission/***.gms \\\hline 
 IAV\_ass & NoCC & CC1 etc. & For the IAV analysis, climate change condition can be specified by this switch. \\\hline 
-Scenario\_name & SSP2 & SSP1-SSP5 and any & Scenario name that specifies socioeconomic assumptions. The name is freely available. Corresponding socioeconomic scenario should be specified in the prog/scenario/socioeconomic/***.gms  \\\hline 
+Scenario\_name & SSP2 & SSP1-SSP5 and any & Scenario name that specifies socioeconomic assumptions. The name is freely available. Corresponding socioeconomic scenario should be specified in the scenario/socioeconomic/***.gms  \\\hline 
+ModelInt & No & CGEEnd1, GEO71 etc. & Specification of coupling with an external model. ''No'' runs AIM/Hub standalone; otherwise the corresponding settings are specified in the scenario/ModelInt/***.gms \\\hline
 Enduse & on & Off & If detailed Enduse technological information is used, then turn on. It increases computational burden almost double. \\\hline 
 RunExclude & "" & Any scenarios & List of scenarios that are not run. \\\hline 
 \end{tabularx}
@@ -4652,7 +4665,7 @@ Other considerations & Some variables are not allowed to submit for some project
 
 
 \begin{itemize}
-\item Add new socioeconomic assumptions in prog/prog/scenario/socioeconomic/
+\item Add new socioeconomic assumptions in scenario/socioeconomic/
 \begin{itemize}
 \item Usually copy SSP2 and rename it.
 \item Then, specify each exercise assumptions. The specification would potentially be in various files.
