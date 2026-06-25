@@ -3625,7 +3625,7 @@ Some notes:
 \item[set database=off]running climate model and making a csv file for IIASA database template model results (This function is outdated from July 2021)
 \item[set NCPU=8]Specifying number of cores that are used for the pararell process
 \item[set pausemode=off]If you would like to pause each process, turn on this switch
-\item[set MultiSol=3]If you would like to use multi-threds, specify the number and 1,3, or 5 are currently available. Be careful number of NCPU, scenarios and this MultiSol. \$scenarios*\$MultiSol will be parallelly used. 
+\item[set MultiSol=3]If you would like to use multi-threads, specify the number (any positive integer; for example 3, 4, 5, or 6 are commonly used). Be careful number of NCPU, scenarios and this MultiSol. \$scenarios*\$MultiSol will be parallelly used. 
 \item[set pridspe=3]If you would like to debug and see the difference of the MultiSol condition, specify the numbers. This option is linked to MultiSol. 
 \item[set SceNameSpe=off]If you would like to specify IAMC template scenario names, turn on this switch and specify the scenario mapping ../tools/iiasa\_database/define/scenario.map. 
 \item[set VisSceNameAuto=off]If you would like to automatically assign the scenario names for visualizatoin, it should be on. otherwise it should be off.
@@ -3654,7 +3654,7 @@ base\_year & 2005 & None & Base year \\\hline
 target\_year & 2050 & 2100 & Last year of target period \\\hline 
 Start\_year & 2006 & Any from base to target year & The starting year of scenario run. Basically 2006 is preferable but for when the users check the model results and conditions in case the users encounter errors \\\hline 
 CLP & BaU & CTAX, 26W, 37W, 45W, 60W etc. & Specification of climate policy. BaU does not have any constraint on emissions nor emission price while the others have. The strength of the constraint depends on the scenarios. The emissions cap or emission price is described in the scenario/emission/***.gms \\\hline 
-IAV\_ass & NoCC & CC1 etc. & For the IAV analysis, climate change condition can be specified by this switch. \\\hline 
+IAVass & NoCC & CC1 etc. & For the IAV analysis, climate change condition can be specified by this switch. The corresponding settings are in scenario/IAV/***.gms. \\\hline 
 Scenario\_name & SSP2 & SSP1-SSP5 and any & Scenario name that specifies socioeconomic assumptions. The name is freely available. Corresponding socioeconomic scenario should be specified in the scenario/socioeconomic/***.gms  \\\hline 
 ModelInt & No & CGEEnd1, GEO71 etc. & Specification of coupling with an external model. ''No'' runs AIM/Hub standalone; otherwise the corresponding settings are specified in the scenario/ModelInt/***.gms \\\hline
 Enduse & on & Off & If detailed Enduse technological information is used, then turn on. It increases computational burden almost double. \\\hline 
@@ -5488,5 +5488,384 @@ XAF & Other Africa & ZMB & Zambia~ \\\hline
 XAF & Other Africa & ZWE & Zimbabwe~ \\\hline 
 \end{tabularx}
 
+
+\chapter{\label{chp:appScenParam}Appendix III (Scenario parameter reference)}
+
+This appendix lists the parameters that can be set in the scenario files. Each
+scenario is a plain GAMS file (a block of \texttt{\$setglobal} statements)
+selected at run time by one of four switches:
+\texttt{scenario\_name} (socioeconomic, files under
+\texttt{scenario/socioeconomic/}), \texttt{CLP} (climate policy,
+\texttt{scenario/climate\_policy/}), \texttt{IAVass} (impact/adaptation,
+\texttt{scenario/IAV/}) and \texttt{ModelInt} (model integration,
+\texttt{scenario/ModelInt/}). A parameter that is not set in the selected
+scenario file falls back to the default defined in the corresponding
+\texttt{inc\_prog/...\_assumption.gms}. The default column below gives that
+fall-back value.
+
+\section{Socioeconomic scenario (scenario\_name)}
+
+Files: \texttt{scenario/socioeconomic/\{name\}.gms}. Available scenarios:
+SSP1--SSP5 and variants. Typical choice: SSP2 (middle-of-the-road).
+
+\subsection{Energy technology}
+\begin{longtable}{|p{0.19\textwidth}|p{0.40\textwidth}|p{0.23\textwidth}|p{0.09\textwidth}|}
+\caption{Socioeconomic parameters: energy technology}\label{tab:sp-soc-entech}\\
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endhead
+\hline
+\endfoot
+sa\_ren\_cost & Renewable energy cost factor (high $=1.5\times$ baseline cost, low $=0.5\times$) & high, med, low & med \\ \hline
+IntCostRen & Integration cost of renewable energy & high, med, low & med \\ \hline
+BIOCCP & Social acceptance of modern biomass (logit share multiplier: high$=1.5$, low$=0.5$) & high, med, low & med \\ \hline
+BIOTECH & Biomass power plant technology development (input coefficient multiplier: high$=1.5$, low$=0.75$) & high, med, low & med \\ \hline
+RENEWCCP & Preference for wind and solar power in the logit function & high, med, ext\_high & med \\ \hline
+NUCTECH & Nuclear technology cost annual change rate (low$=-2\%$, med$=0\%$, high$=+2\%$) & low, med, high & med \\ \hline
+NUCACCP & Social acceptance of nuclear energy (share multiplier: No$=0.01$, low$=0.5$, high$=2.0$) & No, low, med, high & med \\ \hline
+FIREACCP & Preference for fossil-fired power plants (share multiplier: low$=0.75$, high$=1.25$) & low, med, high & med \\ \hline
+FIREEFF & Efficiency of fossil-fired power plants (input coefficient offset $\pm0.05$) & low, med, high & med \\ \hline
+BECCS & Availability of BECCS (bioenergy with CCS) & on, off & on \\ \hline
+CCSAV & Availability of CCS & on, off & on \\ \hline
+CCSCOST & CCS cost multiplier (low$=0.66\times$, high$=1.5\times$) & low, med, high & med \\ \hline
+CCSACCP & CCS acceptance level (low $=$ max 50\% of facility allowed) & low, med, high & med \\ \hline
+CCSstart & Year from which CCS becomes available & integer 2020--2100 & 2029 \\ \hline
+LiqCoal & Coal liquefaction option & on, off & off \\ \hline
+Synfuel & Synthetic fuel option & on, off & off \\ \hline
+\end{longtable}
+
+\subsection{Energy efficiency}
+\begin{longtable}{|p{0.19\textwidth}|p{0.40\textwidth}|p{0.23\textwidth}|p{0.09\textwidth}|}
+\caption{Socioeconomic parameters: energy efficiency}\label{tab:sp-soc-eneff}\\
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endhead
+\hline
+\endfoot
+AEEI & Autonomous energy efficiency improvement, annual rate (low$=-1\%$, med$=0\%$, high$=+1\%$) & low, med, high, high2, high3 & med \\ \hline
+AEEI\_COA & AEEI for coal (annual rate: low$=-0.5\%$, med$=0\%$, high$=+0.5\%$) & Verylow, low, med, high & med \\ \hline
+AEEI\_ELY & AEEI for electricity (annual rate: low$=-0.5\%$, med$=0\%$, high$=+0.5\%$) & low, med, high & med \\ \hline
+AEEI\_OIL & AEEI for oil (annual rate: low$=-0.5\%$, med$=0\%$, high$=+0.5\%$) & low, med, high & med \\ \hline
+as\_BIOAEEI & Traditional biomass use efficiency improvement (annual rate: low$=-0.5\%$, high$=+0.5\%$) & low, med, high & med \\ \hline
+SDETRS & Transportation service demand (passenger income elasticity: low$=0.75$, high$=1.25$) & low, med, high & med \\ \hline
+housemat & Household preference for industrial goods (income elasticity multiplier: low$=0.75$, high$=1.25$) & low, med, high & med \\ \hline
+mat & Improvement speed of steel/cement intermediate input coefficients ($0.5\times$ to $1.5\times$ default) & low, med, high & med \\ \hline
+\end{longtable}
+
+\subsection{Fossil fuel extraction}
+\begin{longtable}{|p{0.19\textwidth}|p{0.40\textwidth}|p{0.23\textwidth}|p{0.09\textwidth}|}
+\caption{Socioeconomic parameters: fossil fuel extraction}\label{tab:sp-soc-ffext}\\
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endhead
+\hline
+\endfoot
+ff\_ext\_coal & Annual cap on coal extraction cost increase rate (low2$=0.5\%$, low$=2\%$, med$=3\%$, high$=4.5\%$) & low2, low, med, high & med \\ \hline
+ff\_ext\_oilgas & Annual cap on oil and gas extraction cost increase rate & low2, low, med, high & med \\ \hline
+ff\_ext & [Legacy] general fossil fuel extraction cost, superseded by ff\_ext\_coal and ff\_ext\_oilgas; setting it has no effect & --- & --- \\ \hline
+\end{longtable}
+
+\subsection{Agriculture and land use}
+\begin{longtable}{|p{0.19\textwidth}|p{0.40\textwidth}|p{0.23\textwidth}|p{0.09\textwidth}|}
+\caption{Socioeconomic parameters: agriculture and land use}\label{tab:sp-soc-aglu}\\
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endhead
+\hline
+\endfoot
+YIDAS & Agricultural yield growth scenario & SSP1--SSP5 & SSP2 \\ \hline
+BioYieldTech & Bioenergy crop yield (high$=1.5\times$, low$=0.75\times$) & high, med, low & med \\ \hline
+LIVSTOCKFOODDEM & Livestock food demand preference and income elasticity & med, low, high & med \\ \hline
+LNDELA & Elasticity of transformation for land use mobility ($0.9$--$1.1\times$ default; dvrg $=$ income-differentiated) & low, med, high, dvrg & med \\ \hline
+UppForExp & Maximum annual forest expansion speed (low$=1\%$, med$=2\%$, high$=3\%$) & low, med, high & med \\ \hline
+FOODDIST & Food distribution regional variance (SSP1/5 small, SSP3 large) & SSP1--SSP5 & SSP2 \\ \hline
+GRZEFF & Grazing pasture efficiency scenario & SSP1--SSP5 & SSP2 \\ \hline
+AfforestSpeed & Maximum afforestation speed in mitigation scenarios (low$=0.4\%$, med$=1\%$ of cropland) & low, med & med \\ \hline
+NoAfforest & Restrict afforestation to no more than baseline level & on, off & off \\ \hline
+FoodWasteRed & Halve food waste by 2030 (SDG target) & on, off & off \\ \hline
+dietlev & Dietary change level & off, lancet, half & off \\ \hline
+dietreg & Target region for dietary change & off, USA, XE25, CHN, etc. & off \\ \hline
+dietcom & Target commodity for dietary change & off, RD, RDoM & off \\ \hline
+ArtMeat\_sw & Artificial meat replacing half of red meat consumption & on, off & off \\ \hline
+subsidy & Food subsidy to maintain minimum per-capita calorie intake & on, off & off \\ \hline
+biofuel & Availability of large-scale modern bioenergy for power generation & on, off & on \\ \hline
+\end{longtable}
+
+\subsection{Trade}
+\begin{longtable}{|p{0.19\textwidth}|p{0.40\textwidth}|p{0.23\textwidth}|p{0.09\textwidth}|}
+\caption{Socioeconomic parameters: trade}\label{tab:sp-soc-trade}\\
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endhead
+\hline
+\endfoot
+TRD\_ELA & Elasticity of substitution between domestic and foreign goods (annual change: low$=-0.2$, high$=+0.2$; dvrg $=$ income-differentiated) & low, med, high, dvrg & med \\ \hline
+TrdAgrExpbar & Agricultural export tax (high $=$ additional 20\%) & high, low & low \\ \hline
+TrdAgrImpbar & Agricultural import tax (high $=$ additional 20\%) & high, low & low \\ \hline
+TrdEneExpbar & Energy export tax (high $=$ additional 20\%) & high, low & low \\ \hline
+TrdEneImpbar & Energy import tax (high $=$ additional 20\%) & high, low & low \\ \hline
+\end{longtable}
+
+\subsection{Macro socioeconomics}
+\begin{longtable}{|p{0.19\textwidth}|p{0.40\textwidth}|p{0.23\textwidth}|p{0.09\textwidth}|}
+\caption{Socioeconomic parameters: macro socioeconomics}\label{tab:sp-soc-macro}\\
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endhead
+\hline
+\endfoot
+GDP & GDP pathway & SSP1--SSP5, ADV, CNV & SSP2 \\ \hline
+POP & Population pathway & SSP1--SSP5, ADV, CNV & SSP2 \\ \hline
+SSPUpdate & Use updated SSP dataset & on, off & on \\ \hline
+FGASASM & F-gas emission scenario (based on IMAGE team data) & SSP1--SSP5 & SSP2 \\ \hline
+EmiSSP & GHG emission pathway generated by DICE & SSP1--SSP5 & SSP2 \\ \hline
+UrbAreaScenario & Urban land area scenario & SSP1--SSP5 & SSP2 \\ \hline
+WatIntImp & Water consumption intensity improvement rate (High $=$ same as past, Low $=$ 1/4 of past) & Med, High, Low & Med \\ \hline
+CapForLevel & Capital formation level relative to GDP growth ($\pm1\%$ annual adjustment) & Med, High, Low & Med \\ \hline
+AddCapEneCosMax & Maximum share of additional capital formation due to increased energy system costs & numeric 0--2 & 0.3 \\ \hline
+limSW & Maximum availability of variable renewable energy (\% cap; 0 $=$ no limit) & numeric & 0 \\ \hline
+\end{longtable}
+
+\subsection{Air pollution}
+\begin{longtable}{|p{0.19\textwidth}|p{0.40\textwidth}|p{0.23\textwidth}|p{0.09\textwidth}|}
+\caption{Socioeconomic parameters: air pollution}\label{tab:sp-soc-airpol}\\
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endhead
+\hline
+\endfoot
+airpocef & Annual improvement rate of SOx emission factors (med$=5\%$, high$=7.5\%$) or SSP protocol-based & med, high, ext\_high, APS\_strong, APS\_central, APS\_weak & med \\ \hline
+neremc & Non-energy emission reduction cost and maximum reduction speed & med, high, low & med \\ \hline
+AirPolCalib & Air pollutant emission calibration using CEDS (2025 or 2017 version) & new, old, off & new \\ \hline
+APEneSupCalib & Include energy supply sector in air pollution calibration & on, off & off \\ \hline
+AirPolEDG & EDGAR-based air pollutant calibration & on, off & on \\ \hline
+AirPolSceMIP & Apply SceMIP scenario for air pollutant emission coefficients & on, off & on \\ \hline
+AirPolEffSce & Air pollutant emission coefficient scenario (M$=$medium, CLE$=$current legislation, MFR$=$maximum feasible reduction) & M, CLE, MFR & M \\ \hline
+CarTaxPen & Apply carbon tax penalty & on, off & on \\ \hline
+DACEne & Energy source for direct air capture & Ely, Gas & Ely \\ \hline
+DACCost & Direct air capture cost assumption & high, med & med \\ \hline
+\end{longtable}
+
+\subsection{National scenarios}
+National scenario switches select a country-specific scenario file. They share
+the form \texttt{NS\_\{region\}} with options No, NS1, NS2, \ldots\ and default
+No. Available regions: JPN, CHN, IND, IDN, KOR, THA, MYS, VNM, PHL, TWN, USA,
+BRA, XOC, XE25, CAN, XSE, XLM.
+
+\section{Climate policy scenario (CLP)}
+
+Files: \texttt{scenario/climate\_policy/\{name\}.gms}. Multiple values may be
+given (space-separated, e.g. \texttt{CLP="BaU 500C\_CACN"}); they run in
+parallel. The BaU case must be completed before mitigation cases, because the
+latter use BaU results.
+
+\subsection{Core emissions constraint}
+\begin{longtable}{|p{0.19\textwidth}|p{0.40\textwidth}|p{0.23\textwidth}|p{0.09\textwidth}|}
+\caption{Climate policy parameters: core emissions constraint}\label{tab:sp-clp-core}\\
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endhead
+\hline
+\endfoot
+GHG\_cap & Emission cap (on) or carbon tax (off) & on, off & on \\ \hline
+emission\_trading & Allow emissions trading & on, off & off \\ \hline
+emission\_trading2020 & Allow emissions trading from 2020 to 2030 & on, off & off \\ \hline
+CarBud & Century carbon budget (GtCO2); specify in units of 100 & 100, 200, \ldots, 1000, \ldots & 1000 \\ \hline
+EmiLowBou & Lower boundary on global annual emissions (GtCO2/yr: vhigh$=-1$, high$=-7$, med$=-12$, low$=-15$, vlow$=-20$) & vhigh, high, med, low, vlow, medhigh & med \\ \hline
+EmiConsCov & Coverage of emission constraint & GHG, CO2, IndCO2 & CO2 \\ \hline
+CCAP\_GLOBAL & Individual country emission caps (vs.\ global pooled cap) & on, off & off \\ \hline
+\end{longtable}
+
+\subsection{Emission pathways and policy cooperation}
+\begin{longtable}{|p{0.19\textwidth}|p{0.40\textwidth}|p{0.23\textwidth}|p{0.09\textwidth}|}
+\caption{Climate policy parameters: pathways and cooperation}\label{tab:sp-clp-path}\\
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endhead
+\hline
+\endfoot
+SPA\_FF & Fossil fuel emission policy cooperation pathway & CO2F1\_CACN, CO2F1\_2025CP, CO2F1\_2030CP, CO2F1\_2050CP, EmiTar2030\_CONT1, 2020NDC\_NZE, etc. & CO2F1\_2025CP \\ \hline
+SPA\_LN & Land use policy cooperation pathway & LP, LN, LD & LP \\ \hline
+FGASPOL & F-gas emission policy pathway & BaU, 26W, 34W, 45W, 60W, 26W\_SPA1--SPA5, etc. & BaU \\ \hline
+NDC & Reflect Paris Agreement NDC & 2015INDC, 2020NDC, off & off \\ \hline
+GWPAssump & Global warming potential values (AR4: CH4$=23$, N2O$=298$) & AR4, AR5 & AR4 \\ \hline
+AGRPRI & Carbon pricing applied to non-CO2 agricultural emissions & on, off & on \\ \hline
+CurPolby2030 & Apply current-policy-equivalent carbon price between 2025 and 2030 & on, off & off \\ \hline
+CurPolAfter2030 & Treatment of current policy carbon price after 2030 & Continue2030, Phaseout, off & off \\ \hline
+CarPrcConv & Convergence year for the regional carbon price gap & 2035--2100 & 2035 \\ \hline
+Global4National & Global model scenario to take world prices from & 26W\_SPACO2, off, etc. & 26W\_SPACO2 \\ \hline
+\end{longtable}
+
+\subsection{Carbon tax}
+\begin{longtable}{|p{0.19\textwidth}|p{0.40\textwidth}|p{0.23\textwidth}|p{0.09\textwidth}|}
+\caption{Climate policy parameters: carbon tax}\label{tab:sp-clp-ctax}\\
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endhead
+\hline
+\endfoot
+CARBTAX & Annual increase rate of carbon tax & numeric & 0 \\ \hline
+CARBINI & Initial year carbon tax value & numeric & 1 \\ \hline
+CTAXRECYCLE & Carbon tax revenue recycling mechanism & HOU (lump-sum to households), LAB (labor subsidy) & HOU \\ \hline
+\end{longtable}
+
+\subsection{Renewable energy and decarbonization policy}
+\begin{longtable}{|p{0.19\textwidth}|p{0.40\textwidth}|p{0.23\textwidth}|p{0.09\textwidth}|}
+\caption{Climate policy parameters: renewable and decarbonization policy}\label{tab:sp-clp-ren}\\
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endhead
+\hline
+\endfoot
+RENPRE & Preference for renewables (solar, wind, biomass) in the power sector & CONS (conservative), NEUT (neutral) & CONS \\ \hline
+TRSBIOPRE & Preference for biofuels in the transport sector & CONS, NEUT, AGGR (aggressive) & CONS \\ \hline
+FosFirePhaseOut & Carbon price threshold (USD/tCO2) above which fossil power plants are phased out at 4\%/year & numeric (set very high to disable) & 50 \\ \hline
+\end{longtable}
+
+\subsection{Emissions allowance allocation and convergence}
+\begin{longtable}{|p{0.19\textwidth}|p{0.40\textwidth}|p{0.23\textwidth}|p{0.09\textwidth}|}
+\caption{Climate policy parameters: allowance allocation and convergence}\label{tab:sp-clp-alloc}\\
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endhead
+\hline
+\endfoot
+EmiAllAlo & Enable emissions allowance allocation mechanism & on, off & off \\ \hline
+ConvYear & Convergence year for allowance allocation & 2050--2100 & 2050 \\ \hline
+RedStaYear & Year when emissions reduction begins & 2021--2100 & 2021 \\ \hline
+ConvScenario & Global total emissions constraint for the convergence scenario & 26W, etc. & 26W \\ \hline
+ET\_2050 & Emissions trading toward and beyond 2050 & on, off & off \\ \hline
+CONT\_ETS & Continental-level emissions trading system & on, off & off \\ \hline
+IntTransfer & International financial transfers & on, off & off \\ \hline
+IntTransferSource & Source countries for international transfers & Developed, DevelopedPLUS & Developed \\ \hline
+\end{longtable}
+
+\subsection{Agriculture and AFOLU}
+\begin{longtable}{|p{0.19\textwidth}|p{0.40\textwidth}|p{0.23\textwidth}|p{0.09\textwidth}|}
+\caption{Climate policy parameters: agriculture and AFOLU}\label{tab:sp-clp-agr}\\
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endhead
+\hline
+\endfoot
+AGRCARMAX & Maximum carbon price applied to agriculture (USD/tCO2) & numeric & 200 \\ \hline
+\end{longtable}
+
+\subsection{Carbon dioxide removal (CDR) technologies}
+\begin{longtable}{|p{0.19\textwidth}|p{0.40\textwidth}|p{0.23\textwidth}|p{0.09\textwidth}|}
+\caption{Climate policy parameters: CDR technologies}\label{tab:sp-clp-cdr}\\
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endhead
+\hline
+\endfoot
+DACCS & Availability of direct air capture with CCS & on, off & off \\ \hline
+DACCSStoCap & Maximum cumulative DACCS capacity (MtCO2) & numeric & 10000 \\ \hline
+DACCSStoGro & Maximum annual DACCS capacity growth (MtCO2/yr) & numeric & 1000 \\ \hline
+EnhancedWeather & Availability of enhanced weathering & on, off & off \\ \hline
+SoilCarbon & Availability of soil carbon sequestration & on, off & off \\ \hline
+Biochar & Availability of biochar & on, off & off \\ \hline
+AvailEnhancedWeather & Availability factor for enhanced weathering & high, med & med \\ \hline
+AvailSoilCarbon & Availability factor for soil carbon sequestration & high, med & med \\ \hline
+AvailBiochar & Availability factor for biochar & high, med & med \\ \hline
+\end{longtable}
+
+\section{Impact, adaptation and vulnerability scenario (IAVass)}
+
+Files: \texttt{scenario/IAV/\{name\}.gms}. Available scenarios: NoCC, CC1, BIOD,
+LandMs, LandMs2, DEMFWR, PROD, NoCC2. Typical choice: NoCC (exclude climate
+change impacts; used for standard BaU and mitigation runs).
+
+\begin{longtable}{|p{0.19\textwidth}|p{0.40\textwidth}|p{0.23\textwidth}|p{0.09\textwidth}|}
+\caption{IAV scenario parameters}\label{tab:sp-iav}\\
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endhead
+\hline
+\endfoot
+CRF & Radiative forcing level for impact assessment & RCP26, RCP45, RCP60, RCP85 & RCP85 \\ \hline
+CCI & Climate change impact on agriculture; specifies the GCM/climate name & off, bc11, cc5\_, ce2\_, gc3\_, ge2g, ge2m, ge2r, hg2e, m50\_, mc3\_, mes\_, ne1m & off \\ \hline
+ADP & Adaptation of agricultural production & ADP (with adaptation), NADP (without) & ADP \\ \hline
+SMODEL\_HDDCDD & GCM used for heating/cooling degree-day energy demand estimation & hadgem2-es, gfdl-esm2m, ipsl-cm5a-lr, miroc-esm-chem, noresm1-m & hadgem2-es \\ \hline
+HDD & Heating degree-day threshold temperature & HDD15--HDD22 (1$^\circ$C steps) & HDD18 \\ \hline
+CDD & Cooling degree-day threshold temperature & CDD18--CDD28 (1$^\circ$C steps) & CDD18 \\ \hline
+highyieldreg & Region receiving enhanced agricultural yield growth & off, USA, XE25, CHN, etc. & off \\ \hline
+HighGrzreg & Region receiving enhanced grazing pasture productivity & off, USA, XE25, CHN, etc. & off \\ \hline
+LandProtect & Land protection constraint & on, off, WDPA, PLUM & off \\ \hline
+\end{longtable}
+
+\section{Model integration scenario (ModelInt)}
+
+Files: \texttt{scenario/ModelInt/\{name\}.gms}. Available scenarios: No,
+CGEEnd1, GEO71, scenarioMIP\_global1, scenarioMIP\_global2. Typical choice: No
+(standalone AIM/Hub without external model coupling).
+
+\begin{longtable}{|p{0.19\textwidth}|p{0.40\textwidth}|p{0.23\textwidth}|p{0.09\textwidth}|}
+\caption{Model integration scenario parameters}\label{tab:sp-modelint}\\
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Options} & \textbf{Default} \\ \hline
+\endhead
+\hline
+\endfoot
+EneModel & External energy model to couple & None, MESSAGE, AIMEnduse & None \\ \hline
+EneModel\_Inv & Reflect investment information from the coupled energy model & on, off & off \\ \hline
+EnergyModelInd & Use energy model information for the industrial sector & on, off & on \\ \hline
+EnergyModelSER & Use energy model information for the commercial sector & on, off & on \\ \hline
+EnergyModelTRS & Use energy model information for the transport sector & on, off & on \\ \hline
+EnergyModelSupply & Use energy model information for energy supply sectors & on, off & on \\ \hline
+EnergyModelRSD & Use energy model information for the residential sector & on, off & on \\ \hline
+PLUMIntSW & Couple with the PLUM land use model & on, off & off \\ \hline
+ModelIntPre & Couple with the legacy CGE model & on, off & off \\ \hline
+HHswitch & Reflect household price elasticity from PHI & on, off & off \\ \hline
+HHAidswitch & International transfers for poverty eradication & on, off & off \\ \hline
+\end{longtable}
 
 \end{document}
