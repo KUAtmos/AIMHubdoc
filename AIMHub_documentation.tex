@@ -432,6 +432,9 @@ BIC	&  & Biochar CDR &  &  \\\hline
 SOI	&  & Soil carbon CDR &  &  \\\hline
 AFS	&  & Afforestation &  &  \\\hline
 EWE	&  & Enhanced weathering CDR &  &  \\\hline
+OAE	&  & Ocean alkalinity enhancement CDR (limestone route) &  &  \\\hline
+OAO	&  & Ocean alkalinity enhancement CDR (olivine route) &  &  \\\hline
+BLC	&  & Blue carbon (coastal ecosystem) CDR &  &  \\\hline
 
 \end{tabularx}
 \section{\label{sec:RegClass}Region classification}
@@ -603,9 +606,14 @@ Code & Description \\\hline
  10X2 & CCS for industrial process \\
  11X & Biomass zero emissions800 \\
  12X & atmospheric CO2 storage800 \\
- 12Y & Enhanced Weathering800 \\  
+ 12Y & Enhanced Weathering800 \\
  12U & Soil carbon800 \\
  12V & Biochar800 \\
+ 12W & Ocean Alkalinity Enhancement (limestone route) \\
+ 12W2 & Ocean Alkalinity Enhancement lime-kiln CO2 (gross, emitted before capture) \\
+ 12W3 & Ocean Alkalinity Enhancement captured kiln CO2 (sent to storage) \\
+ 12S & Ocean Alkalinity Enhancement (olivine route) \\
+ 12T & Blue Carbon \\
 \end{tabularx}
 
 \chapter{\label{chp:Math}Mathematical statement}
@@ -3861,7 +3869,10 @@ Years & Switch & Contents \\\hline
 2023 & DACstart & direct air capture starts \\\hline 
 2023 & STOstart & atomospheric co2 storage starts \\\hline 
 2030 & BaUNoCCLoadYear & BaU\_NoCC data load year. Default is 2030 but in some cases, it would be needed to changed (e.g. regionally fragmented policy scenarios that have variations in 2050's condition) \\\hline 
-2015 & affstartyear & Afforestation starting year \\\hline 
+2015 & affstartyear & Afforestation starting year \\\hline
+2035 & OAEstartyear & Ocean alkalinity enhancement (limestone route) starting year \\\hline
+2030 & OAOstartyear & Ocean alkalinity by olivine (coastal olivine spreading) starting year \\\hline
+2025 & BLCstartyear & Blue carbon (coastal ecosystem restoration) starting year \\\hline
 \end{tabularx}
 
 \section{\label{sec:InpData}Input data}
@@ -4395,6 +4406,7 @@ This section describes how to add hydrogen production sectors. This procedure ca
 For example, introduction of artificial meat production sector has been made under the commit number  "ed2f31d"  in AIMHub repository and you can refer how it has been realized by looking at this commit.
 Another example is introduction of enhanced weathering commit number "c7bee8e" in AIMHub repository and you can refer how it has been realized by looking at this commit.
 Further example is introduction of soil carbon and biochar commit number "71d9d1" in AIMHub repository and you can refer how it has been realized by looking at this commit.
+The three ocean- and coastal-ecosystem CDR technologies were added later on the "OceanAlkalinity" branch as clones of the enhanced-weathering and soil-carbon patterns: ocean alkalinity enhancement (OAE, limestone route) under commit "2d7c96c", ocean alkalinity by olivine (OAO) together with the shared enhanced-weathering/OAO silicate-grinding constraint under commit "7a68bd2", and blue carbon (BLC, coastal ecosystem restoration) under commit "35c5461". Their data, parameters and sources are documented separately in \texttt{model-development/AIMHub/docs/cdr\_data\_oae\_bluecarbon.md} of the aim-research repository.
 
 
 \subsection{\label{subsec:ProNonEleSec}Procedure for non-elecrticity sector}
@@ -5810,6 +5822,22 @@ Biochar & Availability of biochar & on, off & off \\ \hline
 AvailEnhancedWeather & Availability factor for enhanced weathering & high, med & med \\ \hline
 AvailSoilCarbon & Availability factor for soil carbon sequestration & high, med & med \\ \hline
 AvailBiochar & Availability factor for biochar & high, med & med \\ \hline
+OceanAlkalinity & Availability of ocean alkalinity enhancement (OAE, limestone route) & on, off & off \\ \hline
+AvailOceanAlkalinity & Availability factor for OAE & high, med, low & med \\ \hline
+OAEcost & OAE net cost case (low $\sim$70, med $\sim$120, high $\sim$200 USD/tCO2) & low, med, high & med \\ \hline
+OAEpot & Dedicatable limestone-throughput fraction for OAE (low 0.18, med, high 1.09) & low, med, high & med \\ \hline
+OAECCSlink & Require lime-kiln CCS before OAE can deploy (no CCS $\Rightarrow$ no OAE) & on, off & on \\ \hline
+OceanOlivine & Availability of ocean alkalinity by olivine (OAO, no calcination/CCS) & on, off & off \\ \hline
+AvailOceanOlivine & Availability factor for OAO & high, med, low & med \\ \hline
+OAOcost & OAO net cost case (low $\sim$40, med $\sim$70, high $\sim$130 USD/tCO2) & low, med, high & med \\ \hline
+SilicateShare & Share the silicate-grinding capacity pool between enhanced weathering and OAO (previous-year use) & on, off & off \\ \hline
+SilicatePot & Fraction of crushing capacity dedicatable to CDR grinding (low 0.20, med 0.55, high 1.10) & low, med, high & med \\ \hline
+BlueCarbon & Availability of blue carbon (coastal ecosystem restoration) & on, off & off \\ \hline
+AvailBlueCarbon & Availability factor for blue carbon (potential low/med/high) & high, med, low & med \\ \hline
+BLCcost & Blue carbon net cost case (low $\sim$18, med $\sim$43, high $\sim$100 USD/tCO2) & low, med, high & med \\ \hline
+BLCcap & Enforce cumulative-capacity cap on blue carbon (asymptotes to lost-carbon stock) & on, off & on \\ \hline
+DACCSlink & Clamp token DACCS storage when geological CCS is unavailable & on, off & on \\ \hline
+DACCSStoCapNoCCS & Token DACCS storage cap when no geological CCS (MtCO2) & numeric & 1 \\ \hline
 \end{longtable}
 
 \section{Impact, adaptation and vulnerability scenario (IAVass)}
