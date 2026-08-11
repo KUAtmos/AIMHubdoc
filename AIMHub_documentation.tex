@@ -3637,6 +3637,11 @@ Some notes:
 \item[set pridspe=3]If you would like to debug and see the difference of the MultiSol condition, specify the numbers. This option is linked to MultiSol. 
 \item[set SceNameSpe=off]If you would like to specify IAMC template scenario names, turn on this switch and specify the scenario mapping ../tools/iiasa\_database/define/scenario.map. 
 \item[set VisSceNameAuto=off]If you would like to automatically assign the scenario names for visualizatoin, it should be on. otherwise it should be off.
+\item[set magicc=off]deterministic MAGICC run (tools/MAGICC), writing the global-mean temperature to output/magicc/iiasa\_database\_climate.gdx.
+\item[set climate\_assessment=off]probabilistic MAGICC 7.5.3 ensemble (tools/ClimateAssesment), writing the AR6-diagnostics GSAT to output/climate\_assessment/.
+\item[set run\_visualization=off]making the standard analysis figures (tools/Visualization).
+\item[set Feasibility=off]feasibility analysis of the scenarios (tools/Feasibility).
+\item[set Burke=off]Burke climate economic-impact calculator (tools/BurkeCIcalculator), run as a submodule. It reads the AIM/Hub global-mean temperature (preferring the probabilistic climate-assessment GSAT and falling back to the deterministic MAGICC gdx) and writes country and regional (R5/R10/R17) GDP-per-capita impacts, figures (world map, major-economy bars, regional time series), and a standalone IAMC-format file to output/CI/Burke/. It is not merged with the AIM/Hub IAMC database.
 
 \end{description}
 on/off are options for all parameters
