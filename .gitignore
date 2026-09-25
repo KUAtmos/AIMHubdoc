@@ -10,3 +10,4 @@
 *.gz
 fig/*.emf
 fig/*.wmf
+*.xbb

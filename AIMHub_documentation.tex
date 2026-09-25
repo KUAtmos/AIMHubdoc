@@ -53,7 +53,10 @@
 \providecommand{\changed}[1]{#1}
 \newenvironment{changedblock}{}{}
 
-\title{AIM/Hub 2.3.20 Documentation}
+% \AIMHubVersion is defined in version.tex, which tex.sh regenerates from the
+% AIM/Hub model version (../define/version.gms). Do not edit the title by hand.
+\input{version}
+\title{AIM/Hub \AIMHubVersion{} Documentation}
 \author{Shinichiro Fujimori}
 
 
@@ -264,7 +267,12 @@ Computable General Equilibrium model, Social Accounting Matrix, Energy Balance T
   \item January, 2026 S. Fujimori Version 2.3.23 \\
       Documentation updated for model intercomparison projects (MIP),
       incorporating external contributions. 
-      
+
+  \item September, 2026 S. Fujimori Version 3.0.0 \\
+      From this version on, the documentation carries the version of the
+      AIM/Hub model it describes (shown in the title), and changes are
+      recorded in CHANGELOG.md of the AIM/Hub repository.
+
   \end{itemize}
 \end{quote}
 \newpage
