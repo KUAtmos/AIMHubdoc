@@ -1076,6 +1076,8 @@ $\Upgamma _{r,a}^{vae}$: Complementary variable for final energy consumption con
 $H _{r,a}^{vae}$: Complementary variable for final energy consumption constrain for the energy information coupling mode (in the code this variable is represented by \seqsplit{SUM(FCAGGA\$MapFCCONS(FCAGGA,"TOTAL",A,"COM\_ELY"), COMP\_FC\_TEC\_AGG(R,FCAGGA,"TOTAL")+ CompFCTecAgg(R,FCAGGA,"TOTAL")))}. COMP\_FC\_TEC\_AGG  is endogenously determined and CompFCTecAgg is exogenous, which is calibrated before 2015 period).
 \end{flushleft}
 
+For the transport sector with the mode-wise transport energy (switch TrsModeDet, flag $ATRSMODEDET_{r,a}$), the energy input $QENE_{r,a}$ is not determined by (CESVAENEFOC) but by the sum of the mode-wise fuel use, and the energy term of (CESVAENE) is replaced by an effective energy which carries the non-price changes of the mode energy as an endogenous AEEI. See Section \ref{sec:TransportBlo}.
+
 \begin{flushleft}\textbf{Energy and Value-Added composite balance}\end{flushleft}
 
 
@@ -3261,7 +3263,7 @@ Transport sector is treated as single sector as an industrial acticity while it 
 \begin{flushleft}\textbf{Transport energy consumption by mode}\end{flushleft}
 
 
-\begin{center}$TRS\_ ENE_{r,tr}=QDTRST_{r,tr}\cdot trseneeffi_{r,tr}\cdot \left(PENE\_ TR_{r,tr}/PENE\_ TR\_ base_{r,tr}\right)^{prtrsrel_{r,tr}},\,\,\,\,\forall r\in R,\,tr\in TR$ (TRSENEEQ)
+\begin{center}$TRS\_ ENE_{r,tr}=QDTRST_{r,tr}\cdot trseneeffi_{r,tr}\cdot \left(1+H _{r,tr}^{trs}\right)\cdot \left(1+H _{r,"\mathrm{TRS}"}^{vae}\right)^{ATRSMODEDET_{r,"\mathrm{TRS}"}}\cdot \left(PENE\_ TR_{r,tr}/PENE\_ TR\_ base_{r,tr}\right)^{prtrsrel_{r,tr}},\,\,\,\,\forall r\in R,\,tr\in TR$ (TRSENEEQ)
 \end{center}
 
 \begin{flushleft}
@@ -3269,7 +3271,15 @@ $tr\in TR$: a set of transport mode in industry
 
 $TRS\_ENE_{r,tr}$: Transport energy consumption by mode \textit{tr}
 
-$QDTRST_{r,tr}$: Transport demand,
+$QDTRST_{r,tr}$: Transport demand (for the pipeline mode TR\_TPL the gas supply $QQ_{r,"\mathrm{COM\_GDT}"}$ is used instead),
+
+$trseneeffi_{r,tr}$: Energy intensity of transport mode \textit{tr},
+
+$H _{r,tr}^{trs}$: Complementary variable of the mode-wise final energy wedge for the energy information coupling mode (in the code \seqsplit{COMP\_FC\_TEC\_AGG}, \seqsplit{CompFCTecAgg} and \seqsplit{CompFCTecAggPrev} of the aggregate mapped by MapFCAGGATRS),
+
+$H _{r,"\mathrm{TRS}"}^{vae}$: Total final energy wedge of the transport sector as in (CESVAENE), applied here only with the mode-wise transport energy,
+
+$ATRSMODEDET_{r,a}$: Flag for the mode-wise transport energy (1 if switch TrsModeDet is on, 0 otherwise),
 
 $PENE\_TR_{r,tr}$: Price of transport,
 
@@ -3336,19 +3346,30 @@ The transport sector's energyconsumption is constrainted by QINT which is adjust
 \begin{center} \begin{align} \begin{autobreak}
 TRS\_ ENE\_ FL_{r,tr,c} = 
 TRS\_ ENE_{r,tr}\cdot (1+CETRSFUEL_{r,c,"trs"})\cdot
-\beta _{r,tr,c}^{trsene}\cdot \{PQD_{r,c}\cdot (1+tqd_{r,c,"trs"})+
+W_{r,tr,c}\cdot \beta _{r,tr,c}^{trsene}\cdot \{PQD_{r,c}\cdot (1+tqd_{r,c,"trs"})+
 PGHG_{r}\cdot \sum _{g\in G}gwp_{g}\cdot enur_{r,c,"trs"}\cdot efffc_{r,c,"trs",g}\}^{el_{r,tr,c}^{trsene}}
-\cdot [\sum _{cp\in ENE}\beta _{r,tr,cp}^{trsene}\cdot 
-\{PQD_{r,cp}\cdot (1+tqd_{r,cp,"trs"})+PGHG_{r}\cdot \sum _{g\in G}gwp_{g}\cdot 
+\cdot [\sum _{cp\in ENE}W_{r,tr,cp}\cdot \beta _{r,tr,cp}^{trsene}\cdot
+\{PQD_{r,cp}\cdot (1+tqd_{r,cp,"trs"})+PGHG_{r}\cdot \sum _{g\in G}gwp_{g}\cdot
 enur_{r,cp,"trs"}\cdot efffc_{r,cp,"trs",g}\}^{el_{r,tr,cp}^{trsene}}]^{-1}
-\forall r\in R,\,c\in ENE,\,h\in H 
+\forall r\in R,\,c\in ENE,\,h\in H
 \notag \end{autobreak} \end{align}(TRSENEFLEQ)\end{center}
+
+\begin{center}$W_{r,tr,c}=\left(1+H _{r,tr,c}^{trsfl}\right)\cdot \left\{\left(1+H _{r,c,"\mathrm{TRS}"}^{fc}\right)\cdot aeeicoefc_{r,c,"\mathrm{TRS}"}\right\}^{ATRSMODEDET_{r,"\mathrm{TRS}"}}$
+\end{center}
 
 $\beta _{r,tr,c}^{trsene}$: share parameter of Logit function for transport by mode energy source selection ,
 
 $el_{r,tr,c}^{trsene}$: Price elasticity parameter of Logit function for transport by mode energy source selection,
 
-$CETRSFUEL_{r,c,"trs"}$: complementary variable to meet energy consumption from QENEFUEL\_TRS
+$CETRSFUEL_{r,c,"trs"}$: complementary variable to meet energy consumption from QENEFUEL\_TRS (fixed with the mode-wise transport energy),
+
+$W_{r,tr,c}$: share shifter of the transport fuel \textit{c} in mode \textit{tr},
+
+$H _{r,tr,c}^{trsfl}$: Complementary variable of the mode and fuel wise final energy wedge for the energy information coupling mode (in the code \seqsplit{COMP\_FC\_TEC\_AGG}, \seqsplit{CompFCTecAgg} and \seqsplit{CompFCTecAggPrev} of the non-total aggregates mapped by MapFCCONSTRS),
+
+$H _{r,c,"\mathrm{TRS}"}^{fc}$: Sector fuel wedge of the transport sector used in (ENELOGIT) (in the code \seqsplit{COMP\_FC\_TEC}, \seqsplit{CompFCTec} and \seqsplit{CompFCTecPrev}), applied here only with the mode-wise transport energy,
+
+$aeeicoefc_{r,c,"\mathrm{TRS}"}$: fuel specific AEEI coefficient of the transport sector used in (ENELOGIT), applied here only with the mode-wise transport energy,
 
 The emissions can be computed by the emission factors.
 
@@ -3363,6 +3384,48 @@ $TRS\_ENE\_EMI_{r,tr,c,g}$: transport related gas emissions
 
 $eff\_tr_{r,tr,c,g}$: transport related gas emissions factor
 \end{flushleft}
+
+\subsection{\label{sec:TrsModeDet}Mode-wise transport energy (TrsModeDet)}
+
+By default the transport sector fuel use $QINT_{r,c,"\mathrm{TRS}"}$ is determined by the sector energy CES (CESVAENEFOC) and the sector fuel Logit (ENELOGIT), and the mode-wise fuel use is scaled to it by $CETRSFUEL_{r,c,"\mathrm{TRS}"}$ in (QENEFUEL\_TRS). With the switch TrsModeDet (default on, flag $ATRSMODEDET_{r,"\mathrm{TRS}"}=1$ in the regions with transport mode energy) the transport fuel use is instead built bottom-up from the modes. The changes are as follows.
+
+\begin{itemize}
+\item (ENELOGIT) is not applied to the transport sector and $CETRSFUEL_{r,c,"\mathrm{TRS}"}$ is fixed at the previous year value (from the base year on, so at the calibrated value). $QINT_{r,c,"\mathrm{TRS}"}$ is then given by (QENEFUEL\_TRS).
+\item The final energy wedges of the transport sector from the IEA calibration, which act in (ENELOGIT) and (CESVAENE) by default, are moved to the mode equations: the total wedge $H _{r,"\mathrm{TRS}"}^{vae}$ scales the mode energy in (TRSENEEQ) and the fuel wedges $H _{r,c,"\mathrm{TRS}"}^{fc}$ and $aeeicoefc_{r,c,"\mathrm{TRS}"}$ shift the fuel shares in (TRSENEFLEQ). Since they are rebased on the previous year after the calibration period (FCWedgePrev), their effect carries on in the projection.
+\item (CESVAENEFOC) is replaced by the aggregation of the fuel use.
+\end{itemize}
+
+\begin{flushleft}\textbf{Transport sector energy input with the mode-wise transport energy}\end{flushleft}
+
+\begin{center}$QENE_{r,a}=\sum _{c\in ENE}QINT_{r,c,a},\,\,\,\,\forall r\in R,\,a\in ACES,\,ATRSMODEDET_{r,a}=1$ (CESVAENEFOC)
+\end{center}
+
+Since the energy input is now given by the modes, the energy term of (CESVAENE) can no longer react to the energy price. If the original term $(1+H^{vae})^{-1}\cdot aeeit\cdot QENE$ were kept, a decline of the mode energy that is not caused by prices (mode efficiency $trseneeffi$, mode mix, lower pipeline throughput with a lower gas demand) while the monetary activity $QA_{r,"\mathrm{TRS}"}$ grows would have to be compensated by value added, and with the elasticity of substitution below one the value added diverges as the composite approaches its upper bound for a given energy. The energy term is therefore replaced by an effective energy $EEFF_{r,a}$ which treats these non-price changes as an endogenous AEEI and keeps only the price response of the mode energy as a substitution between energy and value added.
+
+\begin{flushleft}\textbf{Effective energy of the energy and value-added composite with the mode-wise transport energy}\end{flushleft}
+
+\begin{center}$EEFF_{r,a}=trseeff0_{r,a}\cdot \frac{QVAE_{r,a}}{QVAE0_{r,a}}\cdot \frac{PIDX_{r,a}}{trspidx0_{r,a}},\,\,\,\,\forall r\in R,\,a\in ACES,\,ATRSMODEDET_{r,a}=1$
+\end{center}
+
+\begin{center}$PIDX_{r,a}=\frac{\sum _{tr\in TR}TRS\_ ENE_{r,tr}}{\sum _{tr\in TR}TRS\_ ENE_{r,tr}\cdot \left(PENE\_ TR_{r,tr}/PENE\_ TR\_ base_{r,tr}\right)^{-prtrsrel_{r,tr}}}$
+\end{center}
+
+\begin{center}$trseeff0_{r,a}=\left(\frac{\left(QVAE0_{r,a}/\alpha _{r,a}^{vae}\right)^{-\rho _{r,a}^{vae}-\Upgamma _{r,a}^{vae}}-\delta _{r,a}^{vae}\cdot QVA0_{r,a}^{-\rho _{r,a}^{vae}-\Upgamma _{r,a}^{vae}}}{1-\delta _{r,a}^{vae}}\right)^{-\frac{1}{\rho _{r,a}^{vae}+\Upgamma _{r,a}^{vae}}}$
+\end{center}
+
+$EEFF_{r,a}$ replaces $(1+H _{r,a}^{vae})^{-1}\cdot aeeit_{r,a}\cdot QENE_{r,a}$ in (CESVAENE).
+
+\begin{flushleft}
+$EEFF_{r,a}$: effective energy of the energy and value-added composite,
+
+$PIDX_{r,a}$: price response index of the transport mode energy, the ratio of the mode energy to the mode energy without the price term of (TRSENEEQ) (the sums run over the modes for which (TRSENEEQ) is defined),
+
+$trseeff0_{r,a}$: effective energy of the previous year, backed out from the previous solution of (CESVAENE) ($QVAE0$ and $QVA0$ are the previous year values and $\Upgamma^{vae}$ is taken at the previous year value),
+
+$trspidx0_{r,a}$: price response index of the previous year, computed from the previous year values of $TRS\_ENE$ and $PENE\_TR$.
+\end{flushleft}
+
+With this formulation the value added to composite ratio $QVA_{r,a}/QVAE_{r,a}$ depends only on $PIDX_{r,a}$ relative to the previous year: it stays constant when the transport energy prices do not change, and rises when the mode energy is reduced by higher energy or carbon prices. The exogenous $aeeit_{r,"\mathrm{TRS}"}$ is not used with the mode-wise transport energy because the energy efficiency is represented by the modes. If the back out fails in a region, the region falls back to the default treatment.
 
 \section{\label{WatUseBlo}Water use block}
 
