@@ -3775,7 +3775,7 @@ Some notes:
 \item[set database=off]running climate model and making a csv file for IIASA database template model results (This function is outdated from July 2021)
 \item[set NCPU=8]Specifying number of cores that are used for the pararell process
 \item[set pausemode=off]If you would like to pause each process, turn on this switch
-\item[set MultiSol=3]If you would like to use multi-threads, specify the number (any positive integer; for example 3, 4, 5, or 6 are commonly used). Be careful number of NCPU, scenarios and this MultiSol. \$scenarios*\$MultiSol will be parallelly used. 
+\item[set MultiSol=3]If you would like to use multi-threads, specify the number (any positive integer; for example 3, 4, 5, or 6 are commonly used). Be careful number of NCPU, scenarios and this MultiSol. \$scenarios*\$MultiSol will be parallelly used. From 2007 on, the trials cut each year into different numbers of homotopy steps (	exttt{maxite} in inc\_prog/030\_solution\_iteration.gms; with MultiSol=6 the trials use 1, 3, 5, 10, 50 and 10 steps), and the first trial that solves without errors is used. 
 \item[set pridspe=3]If you would like to debug and see the difference of the MultiSol condition, specify the numbers. This option is linked to MultiSol. 
 \item[set SceNameSpe=off]If you would like to specify IAMC template scenario names, turn on this switch and specify the scenario mapping ../tools/iiasa\_database/define/scenario.map. 
 \item[set VisSceNameAuto=off]If you would like to automatically assign the scenario names for visualizatoin, it should be on. otherwise it should be off.
@@ -4010,7 +4010,7 @@ Years & Switch & Contents \\\hline
 2023 & BioTraStr & Biofuel trade starts \\\hline 
 2030 & HygTraStr & Hydrogen trade starts \\\hline 
 2007 & YIEAEBstart & IEA energy balance prameter calibration starts \\\hline 
-2019 & YIEAEBend & IEA energy balance prameter calibration ends \\\hline 
+2022 & YIEAEBend & IEA energy balance prameter calibration ends \\\hline 
 2017 & YEneSysModstart & Energy system model prameter calibration starts \\\hline 
 2100 & YEneSysModend & Energy system model prameter calibration ends \\\hline 
 2023 & DACstart & direct air capture starts \\\hline 
@@ -4422,7 +4422,7 @@ There are two types of errors; 1)Error without optimization and 2) Optimization 
 \item Optimization is carried out but solution is not found
 \item solutionIteration.gms
 \begin{itemize}
-\item This option cut a year into several pieces by changing the input coefficients changes. Change "maxite".
+\item This option cut a year into several pieces by changing the input coefficients changes. Change "maxite". The multisol trials already use different values of "maxite" (see MultiSol above).
 \item Moreover, if the scenario implements emissions cap but the emissions constraint is too strict to find solution, then this option might solve this problem. This option is to solve the problem tentatively using the same carbon price and then go to the normal solution. Turn on "NoConsSolvFlag2" and change "maxite3".
 \end{itemize}
 
