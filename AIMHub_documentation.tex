@@ -334,6 +334,20 @@ Directory Structure
 \item How to use the model
 \item Results
 \end{enumerate}
+
+\section{\label{sec:ScopeLimits}What the model computes and what it does not}
+
+For every year and region, the model solves simultaneously for the prices and quantities of the commodities and factors in the social accounting matrix; energy flows in physical units, from primary energy through conversion to final use; emissions of greenhouse gases and air pollutants by source category; land allocation among crops, pasture, forest and other uses; carbon-dioxide removal activities with their costs and potentials; and the response of all of these to climate policy (a carbon price, an emission cap or a cumulative budget). Several things are outside the model by design, and they limit what can be concluded from its results.
+
+\begin{itemize}
+\item \textbf{It does not optimise.} There is no objective function. The model is a system of simultaneous equations solved as a mixed complementarity problem. Producers maximise profits and households maximise utility within a year, but nobody maximises welfare across years or regions. The carbon price of a budget scenario is the shadow price that makes the constraint bind, not the result of a cost--benefit calculation.
+\item \textbf{It has no foresight.} The model is recursive dynamic: each year is solved knowing only the past (Chapter \ref{chp:ModDyn}). Agents do not anticipate future carbon prices, and capital installed today is not chosen with later years in mind. Pathways can therefore differ from those of intertemporal optimisation models under the same budget.
+\item \textbf{Technology change is an input.} Autonomous energy efficiency improvement, productivity growth, technology costs and resource potentials are scenario assumptions, not model outputs.
+\item \textbf{It does not compute the climate.} Concentrations, forcing and temperature are computed after the run by MAGICC. Unless an impact scenario is selected, a warmer climate does not feed back on yields or energy demand within the run.
+\item \textbf{It does not resolve space below the region.} The global model has 17 regions; where within a region land use changes or capacity is built is not represented.
+\item \textbf{It does not represent distribution within a region.} In long-term runs, households, enterprises and government are consolidated into one representative agent per region. Statements about inequality or household groups need another tool.
+\item \textbf{It does not forecast.} The base year 2005 is calibrated, and energy use up to 2022 is steered towards the IEA energy balances; these years are not predictions. The near term reflects exogenous assumptions, not a short-run macroeconomic model.
+\end{itemize}
 \chapter{\label{chp:sam}Social accounting matrix (used in the model)}
 
 \section{\label{sec:sam}Social accounting matrix framework}
@@ -356,7 +370,7 @@ AIM/HUB couples multiple assounting framewok for SAM. Concretely, typical SAM do
 
 \section{\label{sec:SecClas}Sector classification}
 
-The SAM sector classification is shown in Table \ref{tab:List of sectors}. The AIM default column shows the default classification and the original SAM column shows the classification of the original SAM data. The default classification has 14 non-energy sectors and 26 energy sectors. The commodity is coded as ''COM\_'' sector name. The commodity classification is basically same as industrial sectors but there are a few excpetions. One is related to electricity all power supplying sectors produce same commodity as electricity ''COM\_ELY''. The second is biofuel as ''COM\_BIO''. The third is petroreum products and coal transformation products, namely COM\_P\_P and COM\_COP. The fourth is hydrogen ''COM\_HYG''.
+The SAM sector classification is shown in Table \ref{tab:List of sectors}. The AIM default column shows the default classification and the original SAM column shows the classification of the original SAM data. With the default settings, \texttt{define/activity.set} declares 77 activities; the switch \texttt{ely\_agg} is not set, so power generation is split by technology. Activities without an original SAM code are not sectors of the original SAM data. The commodity is coded as ''COM\_'' sector name. The commodity classification is basically same as industrial sectors but there are a few excpetions. One is related to electricity all power supplying sectors produce same commodity as electricity ''COM\_ELY''. The second is biofuel as ''COM\_BIO''. The third is petroreum products and coal transformation products, namely COM\_P\_P and COM\_COP. The fourth is hydrogen ''COM\_HYG''.
 
 
 \begin{tabularx}{\textwidth}{|
@@ -392,16 +406,17 @@ C\_B &  C\_B & Suger crops &  &  C\_B \\\cline{1-3}\cline{5-5}
 OTH\_A & V\_F, PFB, OCR & Vegetable, Fruits and Nuts, Fiber crops, Other crops &  & V\_F, PFB, OCR \\\cline{1-3}\cline{5-5}
 CTL & CTL & Ruminant livestock &  & CTL \\\cline{1-3}\cline{5-5}
 RMK & RMK & Raw milk &  & RMK \\\hline 
-OTH\_L & OAP, WOL, FSH & Non ruminant livestock, other livestock and fishery & 05 & OAP, WOL, FSH \\\hline 
+OTH\_L & OAP, WOL, FSH & Non ruminant livestock, other livestock and fishery & 05 & OAP, WOL, FSH \\\hline
+FSH &  & Fishery (declared as an activity; the default SAM mapping \texttt{define/Si.map} puts fishery in OTH\_L) & 05 & - \\\hline
 FRS & FRS & Forestry & 02 & FRS \\\hline 
 AFS &  & Afforestation & 02 & - \\\hline 
 COA & COA & Coal mining & 101, 102 & COA \\\hline 
 OIL & OIL & Oil mining & 111, 112 (related to oil extraction), 103 & OIL \\\hline 
 GAS & GAS & Gas mining & 111, 112 (related to gas extraction) & GAS \\\hline 
 OMN & OMN & Mineral mining and Other quarrying & 12, 13, 14 & OMN \\\hline 
-FPR & OMT, VOL, MIL, SGR, OFD, B\_T & Food products &  & CMT, OMT, VOL, MIL, SGR, OFD, B\_T, PCR \\\hline 
-LIN & TEX & Textiles and Apparel and Leather & 17, 18, 19, 243 & TEX, WAP, LEA \\\hline 
-LUM & LUM & Wood products & 20 & LUM \\\hline 
+OMT & OMT & Meat products &  & OMT \\\hline
+FPR & VOL, MIL, SGR, OFD, B\_T & Food products &  & CMT, VOL, MIL, SGR, OFD, B\_T, PCR \\\hline
+LIN & TEX, LUM & Textiles, Apparel, Leather and Wood products & 17, 18, 19, 20, 243 & TEX, WAP, LEA, LUM \\\hline
 PPP & PPP & Paper, Paper products and Pulp & 21, 2211, 2212, 2213, 2219, 222, 223 & PPP \\\hline 
 CRP & CRP & Chemical, Plastic and Rubber products & 241, 242, 25 & CRP \\\hline 
 PRF & \multirow{2}{=}{P\_C}  & Petroleum refinery & \multirow{2}{=}{231, 232, 233}  & \multirow{2}{=}{P\_C}  \\\cline{1-1}\cline{3-3}
@@ -412,14 +427,15 @@ NMM & NMM & Mineral products nec & 26 & NMM \\\hline
 I\_S & I\_S & Iron and Steel & 271, 2731 & I\_S \\\hline 
 NFM & NFM & Non Ferrous products & 272, 2732 & NFM \\\hline 
 OMF & FMP, OME, ELE, MVH, OTN, OMF & Other Manufacturing & 28, 29, 31, 33, 30, 32, 34, 35, 36, 37 & FMP, OME, ELE, MVH, OTN, OMF \\\hline 
-E\_COL & E\_COL & Coal-fired generation  without CCS & \multirow{11}{=}{part of 401}  & \multirow{11}{=}{ELY}  \\\cline{1-3}
+E\_COL & E\_COL & Coal-fired generation  without CCS & \multirow{12}{=}{part of 401}  & \multirow{12}{=}{ELY}  \\\cline{1-3}
 E\_OIL & E\_OIL & Oil-fired generation without CCS &  &  \\\cline{1-3}
 E\_GAS & E\_GAS & Gas-fired generation without CCS &  &  \\\cline{1-3}
 E\_NUC & E\_NUC & nuclear electric power generation &  &  \\\cline{1-3}
 E\_HYD & E\_HYD & hydroelectric power generation &  &  \\\cline{1-3}
 E\_GEO & E\_GEO & geothermal power generation &  &  \\\cline{1-3}
 E\_SPV & E\_SPV & photovoltaic power generation &  &  \\\cline{1-3}
-E\_WIN & E\_WIN & wind-power generation &  &  \\\cline{1-3}
+E\_WIN & E\_WIN & onshore wind-power generation &  &  \\\cline{1-3}
+E\_WIF &  & offshore wind-power generation &  &  \\\cline{1-3}
 E\_BIO & E\_BIO & waste biomass-power generation &  &  \\\cline{1-3}
 E\_ORN & E\_ORN & other renewable energy power generation &  &  \\\cline{1-3}
 E\_BIN & E\_BIO & advanced biomass-power generation &  &  \\\hline 
@@ -427,7 +443,8 @@ GDT & GDT & Gas manufacture distribution & 402, 403 & GDT \\\hline
 CNS & CNS & Construction & 45 & CNS \\\hline 
 TRS & TRS & Transport and communications & 60, 61, 62, 63, 64 & ATP, OTP, WTP, CMN \\\hline 
 CSS & WTR, TRD, FIR, CSS & Other service sectors & 41, 50,51,52,55, 65, 66, 67, 70, 71, 72, 73, 74, 75, 80, 85, 90, 91, 92, 93, 94, 95, 99 & ROS, OSG, WTR, TRD, OFI, ISR, OBS, DWE \\\hline 
-CCSN &  & CCS Service &  &  \\\hline 
+CCSN &  & CCS Service &  &  \\\hline
+CCSC, CCSO, CCSEC, CCSEO, CCSHG &  & Further CCS service activities (members of the set \texttt{A\_CCS} together with CCSN) &  &  \\\hline
 NEA &  & Non energy related emissions atabement service &  &  \\\hline 
 RIS &  & Electricity integration service &  &  \\\hline 
 ECR &  & Energy crop production &  &  \\\hline
@@ -443,11 +460,17 @@ OHE	&  & Overhead of electricity including administering &  &  \\\hline
 AMT	&  & Artificial meat &  &  \\\hline
 BIC	&  & Biochar CDR &  &  \\\hline
 SOI	&  & Soil carbon CDR &  &  \\\hline
-AFS	&  & Afforestation &  &  \\\hline
 EWE	&  & Enhanced weathering CDR &  &  \\\hline
 OAE	&  & Ocean alkalinity enhancement CDR (limestone route) &  &  \\\hline
 OAO	&  & Ocean alkalinity enhancement CDR (olivine route) &  &  \\\hline
 BLC	&  & Blue carbon (coastal ecosystem) CDR &  &  \\\hline
+SYL	&  & Synthetic liquid fuels production from hydrogen &  &  \\\hline
+SYG	&  & Synthetic gaseous fuels production from hydrogen &  &  \\\hline
+SLC	&  & Coal to liquid &  &  \\\hline
+AMC	&  & Ammonia production using coal &  &  \\\hline
+AMG	&  & Ammonia production using gas &  &  \\\hline
+AMB	&  & Ammonia production using biomass &  &  \\\hline
+AME	&  & Ammonia production using electricity &  &  \\\hline
 
 \end{tabularx}
 \section{\label{sec:RegClass}Region classification}
@@ -557,7 +580,7 @@ The CGE model includes three macroeconomic balances: the (current) government ba
 
 For the government balance, the closure is that government savings (the difference between current government revenues and current government expenditures) is a flexible residual while all tax rates are fixed. 
 
-For the external balance, which is expressed in foreign currency, the closure is that the real exchange rate is flexible while foreign savings (the current account deficit) is fixed. Given that all other items are fixed in the external balance (transfers between the rest of the world and domestic institutions), the trade balance is also fixed. 
+For the external balance, which is expressed in foreign currency, the closure depends on the model version (\texttt{inc\_prog/020\_ModelClosure.gms}). In the global model with the default switch \texttt{ExrFix=on} (set in \texttt{prog/scenario.gms}), the exchange rate is fixed and foreign savings (the current account deficit) are free, so that the trade balance can vary. With \texttt{ExrFix=off}, the exchange rate of the first region is fixed as the reference and the foreign savings of all other regions are fixed. In the national model, foreign savings are fixed and the real exchange rate is flexible; given that all other items of the external balance (transfers between the rest of the world and domestic institutions) are fixed, the trade balance is also fixed.  
 
 For the Savings-Investment balance, the closure is investment-driven. Real investment quantities are fixed. In order to generate savings that equal the cost of the investment bundle, the base-year savings rates of selected nongovernment institutions are adjusted by the same number of percentage points. Implicitly, it is assumed that the government is able to implement policies that generate the necessary private savings to finance the fixed real investment quantities.
 
@@ -631,7 +654,7 @@ Code & Description \\\hline
 
 \chapter{\label{chp:Math}Mathematical statement}
 
-This chapter presents the mathematical model statement equation by equation. In its mathematical form, the CGE model is a system of simultaneous, nonlinear equations. The model is square - that is, the number of equations is equal to the number of variables. In this class of models, this is a necessary (but not a sufficient) condition for the existence of a unique solution. The chapter divides the equations into six blocks: prices, production and trade, institutions, international trade\footnote{The equations in the ''International trade block'' are involved only if you chose a global model.}, energy and CO\textsubscript{2} emissions, and system constraints. New items (sets, parameters, and variables) are defined the first time that they appear in the equations. Table \ref{tab:Notation} summarizes the notational principles. Parameter and variable names are chosen to facilitate interpretation; most importantly, commodity and factor quantities start with \textit{q}, commodity prices with \textit{p}, and factor prices with \textit{w}.
+This chapter presents the mathematical model statement equation by equation. In its mathematical form, the CGE model is a system of simultaneous, nonlinear equations. The model is square - that is, the number of equations is equal to the number of variables. In this class of models, this is a necessary (but not a sufficient) condition for the existence of a unique solution. The chapter divides the equations into six blocks: prices, production and trade, institutions, international trade\footnote{The equations in the ''International trade block'' are involved only if you chose a global model.}, energy and CO\textsubscript{2} emissions, and system constraints. New items (sets, parameters, and variables) are defined the first time that they appear in the equations. The label after each equation, e.g. (PMDEF), is the name of the GAMS equation; Appendix IV (Chapter \ref{chp:appEqIndex}) lists the file in which each is defined. Table \ref{tab:Notation} summarizes the notational principles. Parameter and variable names are chosen to facilitate interpretation; most importantly, commodity and factor quantities start with \textit{q}, commodity prices with \textit{p}, and factor prices with \textit{w}.
 
 %\begin{tabularx}{\textwidth}{|
 %p{\dimexpr 0.3\linewidth-2\tabcolsep-2\arrayrulewidth}|
@@ -3018,7 +3041,7 @@ $transfr\_crt\_out_{r}$ : current transfer to rest of the world,
 $transfr\_crt\_in_{r}$ : current transfer from rest of the world.
 \end{flushleft}
 
-The current-account balance, which is expressed in foreign currency, imposes equality between the country's spending and its earning of foreign exchange. For the basic model version, foreign savings is fixed; the (real) exchange rate (\textit{EXR}) serves the role of equilibrating variable to the current-account balance. The fact that all items except imports and exports are fixed means that, the trade deficit also is fixed. Alternatively, the exchange rate may be fixed and foreign savings unfixed. In this case, the trade deficit is free to vary.
+The current-account balance, which is expressed in foreign currency, imposes equality between the country's spending and its earning of foreign exchange. In the national model, foreign savings is fixed; the (real) exchange rate (\textit{EXR}) serves the role of equilibrating variable to the current-account balance. The fact that all items except imports and exports are fixed means that, the trade deficit also is fixed. In the global model with the default \texttt{ExrFix=on}, the exchange rate is fixed and foreign savings are unfixed; in this case, the trade deficit is free to vary (\texttt{inc\_prog/020\_ModelClosure.gms}).
 
 \begin{flushleft}\textbf{Government Balance}\end{flushleft}
 
@@ -3654,63 +3677,7 @@ CES parameters determining energy consumption is also dynamically calibrated.
 
 \section{\label{sec:StsPre}System preparation}
 
-\subsection{\label{subsec:InsSof}Installation software}
-
-
-\begin{itemize}
-\item GAMS (\url{http://www.gams.com/}) (license is needed, please contact Fujimori). Version 26.0.0 or newer is needed. CONOPT and PATH are needed for the solver licences  
-\item Git application software, (e.g. Source Tree (\url{https://www.sourcetreeapp.com/}) and TortoiseGit (\url{https://tortoisegit.org/)})  (open source)
-\item R (\url{http://www.r-project.org/}) (open source); this is not necessity but highly recommended to use for analysis and visualization.
-\item RStudio (\url{http://www.rstudio.com/}) (open source) is recommended to use R.
-\end{itemize}
-\subsection{\label{subsec:GitCGE}GitHub and download the CGE model}
-
-Additionally, tex building software is recommended for the advanced users who would change the model codes significantly (e.g., Texlive: https://www.tug.org/texlive/acquire-netinstall.html).
-
-
-\begin{itemize}
-\item Make one directory for working space of the latest AIM/CGE (e.g. AIM\_CGE1.0) and clone the model from Github or get the code from Fujimori. 
-\item Right click in the folder and Github checkout
-\begin{itemize}
-\item You would be asked the repository and then put the repository name \url{https://github.com/KUAtmos/AIMCGE}. Using branches would be preferable and for the beginner, it would be better to make a branch from ''master''. For the developer, new branch is better to be made by ''develop''.
-\item If you don't have access to the repository please contact Fujimori
-\item Then you have several folders under aimcge such as shown below
-\end{itemize}
-
-\end{itemize}
-AIM\_CGE1.0
-
-   {\textbar}control
-
-   {\textbar}data
-
-   {\textbar}define
-
-   {\textbar}doc
-
-   {\textbar}
-
-\subsection{\label{sub:EnvVar}Environmental variables}
-
-The following directory paths should be added to ''Path''
-\begin{itemize}
-\item GAMS exe file location
-\item Cygwin exe file location (Cygwin/bin)
-\item R exe file location (R/bin)
-\end{itemize}
-Note that you need to reboot the system in order to reflect the changes of the environmental variables. It should be English instead of font of Chinese or other languages.
-
-How can you check whether you have added the directory paths to 'Path' correctly? First, open command prompt. Then type 'bash' to see if Cygwin works fine. Then type 'R' to see if R works fine.
-When you run the model and find something is wrong with plotting graphs, please try install R library. First, open R studio, click 'tools', then 'install package', type 'ggplot2' in the blank line and click 'install'. After it is finished, do it similarly for 'RColorBrewer' and 'reshape2'.
-
-\emph{Note for WSL or linux users}
-\begin{itemize}
-\item MAGICC6 uses exe file which required windows basis execution. cygiwn is supposed to use MAGICC6.  
-(updated)
-\item MAGICC7 uses a binary file that is only aviabel for pure linux os system.
-\end{itemize}
-
-
+The software requirements (GAMS version range, Git, bash through Cygwin or Linux, R and its packages, Python for the probabilistic climate assessment), the hardware guidance, the commands to clone the repository \url{https://github.com/KUAtmos/AIMHub} with its submodules, the test run and the branch policy (\texttt{main} for released versions, \texttt{develop} for development) are maintained in the \texttt{README.md} of the model repository. They change with each release, so they are not repeated here; follow the README of the version you use. A GAMS licence with the CONOPT and PATH solvers is needed. For access to the input data repository, contact the maintainer named in the README.
 
 \section{ \label{ref-0065}Basic flow\label{mark-6.2.}}
 
@@ -6046,5 +6013,220 @@ ModelIntPre & Couple with the legacy CGE model & on, off & off \\ \hline
 HHswitch & Reflect household price elasticity from PHI & on, off & off \\ \hline
 HHAidswitch & International transfers for poverty eradication & on, off & off \\ \hline
 \end{longtable}
+
+\chapter{\label{chp:appEqIndex}Appendix IV (Equation index)}
+
+This appendix maps the equation labels of Chapter \ref{chp:Math} to the GAMS code, so that a reader can find where an equation is implemented. It refers to symbols, not to line numbers, so that it stays valid when the code is edited: search the file for the equation name followed by an opening parenthesis or by \texttt{..}. The model statement collects the equations in \texttt{inc\_prog/010\_model\_dec.gms}. The table was generated from the code of AIM/Hub \AIMHubVersion. Where the GAMS name differs from the label only in letter case, the GAMS spelling is shown.
+
+{\small
+\begin{longtable}{|p{0.26\textwidth}|p{0.32\textwidth}|p{0.34\textwidth}|}
+\caption{\label{tab:EqIndex}Equation labels and their GAMS definitions}\\ \hline
+Block (section) & Label in this document & Defined in \\ \hline\hline
+\endfirsthead
+\hline Block (section) & Label in this document & Defined in \\ \hline\hline
+\endhead
+\hline \multicolumn{3}{r}{\small\it Continued on next page}\\
+\endfoot
+\hline
+\endlastfoot
+Price block & \texttt{PMDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PEDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PDDDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PQDDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PQDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{QX2DEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PXDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PX2DEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CPIDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{DPIDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EPIDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{MPIDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GPIDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+Production block & \texttt{PADEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PINTADEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PVADEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PRESDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{LEOAGGVA} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{LEOAGGENE} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{LEOAGGVAE} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{LEOAGGINT} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{LEOAGGRES} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CESVAENE} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CESVAENEFOC} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PVEDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CESVAENE2} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CESVAPRD} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CESVAFOC2} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CESVAFOC} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{FCTLEO} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{FCTLEO2} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CAPAGG5\_PS} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CAPAGG4} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CAPAGG2} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CAPAGG3\_PS} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CAPOPR} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{INTDEM} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{ABTCCAP} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GHG\_ABATEMENT} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GHG\_ABATEMENT2} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GHG\_ABATEMENT3} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{TECHTOTSHARECCS} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CCSTLIMDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{ENELOGIT} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PENEDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{LEOENEELY} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{COMPRDFN} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{RENINTEGRATE} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{OUTAGGFN} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{OUTAGGFOC} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{OUTAGGFOC2} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PRD\_MATERIAL\_BAL\_SH} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EQ\_PW\_SH\_CONS} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PRD\_MATERIAL\_BAL\_SH2} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PRD\_MATERIAL\_BAL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PRDSUM\_MATERIAL\_BAL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{ENESUPCAP} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{ENESUPCAPITAL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{ENESUPFACPRI} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+Trade block & \texttt{ESUPPLY} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EXP\_MATERIAL\_BAL\_SH} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EXP\_MATERIAL\_BAL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{DOME\_MATERIAL\_BAL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{Armington (ARMINGTON)} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{COSTMIN} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{IMP\_MATERIAL\_BAL\_SH} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{IMP\_MATERIAL\_BAL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{DOMI\_MATERIAL\_BAL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+Land block & \texttt{LANDINPUT} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{ENDYILCEQU} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{LANDAGGAEZ} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{LANDAEZSEL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CROPLANDPRICE} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CROPSEL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GRAZPRICE} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GRAZSEL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CROPGRAZSEL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CROPGRAZSEL2} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{AGRLANDPRICE} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{AGRFRSSEL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{AGRFRSSEL2} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{AGGLANDPRICE} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EQ\_LUCHEM} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EQ\_LUCHEM\_P} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EQ\_LUCHEM\_N} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+Institution block & \texttt{FACPRICEDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{YFDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{YIFDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{YIDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{VRENCAPIN} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EHDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{YGDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EGDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{TRIIDEF2\_G} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{TRIIDEF3} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+Expenditure block & \texttt{HMDEM2} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{HPMAP} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{HMMAP} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{HMDEM\_ENE\_FL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{HENECES} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{HENEFOC} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PHENEDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PENESENETDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{QCARENEDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{HMDEM\_ENE\_G} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{LOGITQH\_AGGCR} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{AIDADS\_UTI} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{AIDADS\_MCS} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{AIDADS\_CNS} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{INVDEM} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GOVDEM} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+International trade block & \texttt{QWMDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{QWEDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{WMEQ} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{WMQB} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{WTTR} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PTRSDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{QWESHARE} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{QWMSHARE} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+Biomass consumption as fuel combustion & \texttt{TRDBIO\_CONS\_HOU} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{TRDBIO\_CONS\_IND} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+Air pollutants and GHG emissions & \texttt{EQ\_DRV\_EMIPRO} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EFFIMPR\_PRICE\_CONS} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EQABTC\_NCS} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EMI\_FROM\_HOU\_TOT} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EMI\_FROM\_FF\_HOUCAR} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{TRDBIO\_EMI\_IND} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{TRDBIO\_EMI\_HOU} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EMNEGDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GAS\_FROM\_FF\_INT} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{INTTRSENEDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GHG\_FROM\_TOT} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EQCO2FFIND} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EQCO2FFINDGLOBAL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GHG\_TOT\_CT} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GHGT\_IMPDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GHGT\_EXPDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GHGT\_IMPDEF2} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GHG\_CONSTRAINT\_REGION} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GHG\_NENE\_COST\_A} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EQGHGCAFULLA} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{EQGHGCAFULLH} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GHG\_NENE\_COST\_A\_CONS} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GHG\_NENE\_COST\_A\_CONS2} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GHGCOSTDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GHG\_CONSTRAINT\_TOTAL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GHG\_CONSTRAINT\_PRICE} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GHG\_WORLD\_TR} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+System constraint block & \texttt{FACEQUIL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{DEFUNEMPLOYR} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{COMEQUIL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CURACCBAL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GOVBAL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{TINSDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{MPSDEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{SAVINVBAL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{GLOBALINVBAL} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+Activity constraint block & \texttt{RENEWABLE\_CAP} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{POWER\_SHARE\_CAP} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{QUOQA\_agg} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{QUOQA} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CURTAILMENT} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{STORAGESH} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{CURTAILMENTRATE} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{STORAGERATE} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+Transport block & \texttt{TRSENEEQ} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{TRSPSSEQ} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{TRSFRTEQ} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{HCARPAS} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{PENE\_TR\_DEF} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{QENEFUEL\_TRS} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{TRSENEFLEQ} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{TRS\_EMIS} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+Water use block & \texttt{INDWATWITH} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{AGRWATWITH} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{MUNWATWITH} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+Additional equations & \texttt{EQFACPROD} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{INTTRNS} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+ & \texttt{HOUTRNS} & \texttt{inc\_prog/010\_equations.gms} \\ \hline
+\end{longtable}
+}
+
+The following labels of Chapter \ref{chp:Math} have no equation of the same name in the code of this version. The equation was renamed, merged into another equation, or removed; the text of Chapter \ref{chp:Math} has not yet been updated for it.
+
+\begin{itemize}
+\item \texttt{PMEDEF} (Price block)
+\item \texttt{IPIDEF} (Price block)
+\item \texttt{CAPAGG1} (Production block)
+\item \texttt{OUTAGG\_PERFECT\_SUB2} (Production block)
+\item \texttt{AGRAGGNON} (Land block)
+\item \texttt{AGGLAND\_NON} (Land block)
+\item \texttt{AGGLAND\_NON2} (Land block)
+\item \texttt{TOTLAND} (Land block)
+\item \texttt{EMI\_FROM\_FF\_IND} (Air pollutants and GHG emissions)
+\item \texttt{EMI\_FROM\_FF\_HOU} (Air pollutants and GHG emissions)
+\item \texttt{GAS\_TOT} (Air pollutants and GHG emissions)
+\item \texttt{INDWATCNS} (Water use block)
+\end{itemize}
+
 
 \end{document}
