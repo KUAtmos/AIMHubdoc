@@ -1431,7 +1431,7 @@ On the right-hand side, production quantities, disaggregated by activity, are de
 \begin{flushleft}
 $c\in C\_ RIS$: energy storage service
 
-$strcost_{r,c,a}$: Storage cost conversion factor (in the programing which incorporates conversions from capacity to energy amount and MWh to ktoe)
+$strcost_{r,c,a}$: Storage cost per unit of electricity discharged, converted from MWh to ktoe (see Section~\ref{subsecVRETrCurSto})
 \end{flushleft}
 
 \begin{flushleft}\textbf{Commodity Production and Allocation (non-energy commodities)}\end{flushleft}
@@ -3243,7 +3243,7 @@ Similar to the energy consumption, the output share can be constrained by exogen
 
 \subsection{\label{subsecVRETrCurSto}Variable renewable energy treatment and curtailment and storages}
 
-The curtailment happens when variable renewable energy has a certain share and similarly electricity storage is needed. These are formulated as follows. They are basically documented in Dai et al.(2017)~\cite{RN4379}
+The curtailment happens when variable renewable energy has a certain share and similarly electricity storage is needed. These are formulated as follows. The functional form follows Dai et al.(2017)~\cite{RN4379}. The parameters and the storage cost are described at the end of this subsection.
 
 \begin{flushleft}\textbf{Curtailement rate}\end{flushleft}
 
@@ -3278,6 +3278,79 @@ $astrg_{r,a}$, $bstrg_{r,a}$, $adjust\_strshr_{r}$ : parameters determining the 
 
 \begin{center}$STORRATIO_{r,a}=STORSH_{r}\cdot QX_{r,"COM\_ Ely"}/\sum _{ap}QXAC_{r,ap,"COM\_ Ely"},\,\,\,\,\forall r\in R,\,a\in A$ (STORAGERATE)
 \end{center}
+
+\begin{flushleft}\textbf{Parameters of the curtailment and storage functions}\end{flushleft}
+
+The switch \texttt{VREpara} selects the parameters of the two functions and the storage cost. The default \texttt{AIMTech2026} uses parameters estimated from the results of AIM/Technology, and \texttt{RDLC2015} restores the parameters of Dai et al.~\cite{RN4379} and the storage cost used until version 3.4.1.
+
+With \texttt{AIMTech2026} both functions have a solar term and a wind term (onshore and offshore wind share the wind parameters):
+
+\begin{center}$y_{r}=a^{sol}_{r}\cdot {s^{sol}_{r}}^{b^{sol}}+a^{win}_{r}\cdot {s^{win}_{r}}^{b^{win}}$
+\end{center}
+
+\begin{flushleft}
+$y_{r}$: curtailment, or storage discharge, divided by gross electricity generation (generation before curtailment).
+
+$s^{sol}_{r}$, $s^{win}_{r}$: shares of solar and wind in gross electricity generation.
+\end{flushleft}
+
+The parameters are estimated by non-negative least squares on the AIM/Technology results of the 15 standard scenarios (the test of the integrated tool with AIM/Hub 3.4.0, before the iteration with AIM/Hub), for 17 regions and 2020--2100 in 5-year steps (4335 points). Storage discharge is the sum of batteries, pumped hydro and compressed air storage. The coefficient $a$ is regional and the exponent $b$ is common to all regions. The exponent is bounded below by 1, because an exponent below 1 gives an infinite slope at a share of zero, and both wind exponents are at this bound. $R^{2}$ is 0.835 for curtailment and 0.878 for storage (0.823 and 0.870 when each scenario is predicted from the other 14). Regional exponents raise $R^{2}$ by 0.02--0.03 with 32 more parameters and are not used. The generation of gas and biomass power plants was tested as a third explanatory variable and is not included.
+
+Table~\ref{tab:VREparaAIMTech} lists the parameters. A coefficient of zero means that the regional data show no contribution of that source over the range that AIM/Technology covers. The solar coefficient of curtailment is zero in BRA, CAN, CHN, JPN, XE25 and XER, where the solar share stays below 0.40, 0.03, 0.34, 0.23, 0.16 and 0.20, so curtailment at higher solar shares in these regions is an extrapolation. The parameters are built by \texttt{prog/vre\_parameter\_aimtech.gms} and stored in \texttt{data/VRE\_parameter\_AIMTech.gdx}. A country of the 106-country resolution takes the parameters of the region it belongs to, and a region of the 11-region resolution takes the simple mean of the 17 regions it contains.
+
+\begin{longtable}{|l|r|r|r|r|}
+\caption{\label{tab:VREparaAIMTech}Parameters of the curtailment and storage functions estimated from AIM/Technology (\texttt{VREpara}=\texttt{AIMTech2026}). The exponents are common to all regions.}\\ \hline
+ & \multicolumn{2}{c|}{Curtailment} & \multicolumn{2}{c|}{Storage} \\ \hline
+Region & $a^{sol}$ & $a^{win}$ & $a^{sol}$ & $a^{win}$ \\ \hline
+\endfirsthead
+\hline
+ & \multicolumn{2}{c|}{Curtailment} & \multicolumn{2}{c|}{Storage} \\ \hline
+Region & $a^{sol}$ & $a^{win}$ & $a^{sol}$ & $a^{win}$ \\ \hline
+\endhead
+BRA & 0 & 0.0928 & 0.412 & 0.02957 \\ \hline
+CAN & 0 & 0.00409 & 0 & 0.01265 \\ \hline
+CHN & 0 & 0.02609 & 0.4967 & 0.04058 \\ \hline
+CIS & 0.3051 & 0.002091 & 0.6367 & 0.02157 \\ \hline
+IND & 0.1029 & 0.1645 & 0.3307 & 0.09655 \\ \hline
+JPN & 0 & 0.002235 & 0.39 & 0.0167 \\ \hline
+TUR & 0.2911 & 0.01042 & 0.08914 & 0.1097 \\ \hline
+USA & 0.1909 & 0 & 0.4804 & 0 \\ \hline
+XAF & 0.01804 & 0.002881 & 0.1804 & 0.05668 \\ \hline
+XE25 & 0 & 0.0111 & 0 & 0.03863 \\ \hline
+XER & 0 & 0.01261 & 0.3289 & 0.09098 \\ \hline
+XLM & 0.3128 & 0.00352 & 0.7318 & 0.02396 \\ \hline
+XME & 0.1189 & 0.00563 & 0.3525 & 0.05571 \\ \hline
+XNF & 0.01746 & 0.008632 & 0.336 & 0.0423 \\ \hline
+XOC & 0.04072 & 0.02153 & 0.5442 & 0.02098 \\ \hline
+XSA & 0.4015 & 0.008078 & 0.322 & 0.05665 \\ \hline
+XSE & 0.09652 & 0.06259 & 0.4371 & 0.02977 \\ \hline
+Exponent $b$ & 2.263 & 1 & 1.989 & 1 \\ \hline
+\end{longtable}
+
+Storage starts in a region when the share of solar in electricity generation of the previous year exceeds 3\%. With \texttt{AIMTech2026} wind is counted with solar in the regions that have a wind coefficient. The equation STORAGERATE gives solar and wind the same $STORRATIO$, so the storage cost of a region is shared between solar and wind in proportion to their generation, not in proportion to their terms in the storage function.
+
+\begin{flushleft}\textbf{Storage cost}\end{flushleft}
+
+The storage cost $strcost$ in the equation RENINTEGRATE is a cost per unit of electricity discharged. With \texttt{AIMTech2026} it follows the battery of AIM/Technology:
+
+\begin{center}$strcost_{t}=0.91\cdot \left( I_{t}\cdot \frac{0.10\cdot 1.10^{10}}{1.10^{10}-1}+17.34\right) /\left( 6.7\cdot 365\right) \cdot 1000$
+\end{center}
+
+\begin{flushleft}
+$I_{t}$: investment cost of the battery, 1734 US\$2010 per kW until 2020 and 672 from 2030, linear in between.
+
+The discount rate is 10\% and the lifetime 10 years. 17.34 US\$2010 per kW per year is the fixed operation and maintenance cost.
+
+6.7 hours per day is the discharge at rated power, the median of the AIM/Technology results.
+
+0.91 converts US\$2010 to US\$2005.
+\end{flushleft}
+
+The cost is 111 US\$2005 per MWh until 2020 and 47 from 2030. The battery cost is applied to all storage, including pumped hydro and compressed air storage. With \texttt{RDLC2015} the cost is about 14 US\$2005 per MWh in 2020 and 7 from 2050, of which 10 and 5 are the operation and maintenance cost of solar PV that the old formula added.
+
+\begin{flushleft}\textbf{Storage taken from the energy model}\end{flushleft}
+
+When AIM/Hub runs with the results of AIM/Technology (\texttt{030\_EneModelLoad.gms}), the functions are not used in the regions and years where the energy model has storage. $STORRATIO$ of solar and wind is then the storage discharge of the energy model divided by its gross solar and wind generation, so that the electricity charged with the storage cost equals the discharge of the energy model. Solar always carries the storage and wind carries it where it produced in the previous year.
 
 \section{\label{sec:TransportBlo}Transport block\label{mark-4.12.}}
 
@@ -3884,7 +3957,7 @@ Assumption009 & scenario.gms & Change saving ratio & The saving ratio assumption
 Assumption010 & scenario.gms \newline inc\_prog/020\_biopotential.gms & Biomass fuel potential for wood and agricultural residue & \color{red}{Agricultural residue are computed by previous year's crop production with coefficient which is computed by base year FAO information. Wood residue is also associated with forestry sector's activity level. 50\% of both technical potential can be used for the energy purpose.} \\\hline 
 Assumption011 & scenario.gms & Nonenergy use rate (this is only for the detailed Enduse technology representation mode) & Non energy use assumptions but it is only for the Enduse technology on mode which is rarely used now (July, 2020) \\\hline 
 Assumption012-1 & scenario.gms & Plantation rotation assumption & \color{red}{The assumptions related to plantation rotation. Basically base year Co2 sequestration. This is closely related to the description at ''*Wood removal for wood production'' in ap\_ghg\_emission.gms} \newline \color{red}{The base year assumption is that 90\% of wood removal (industrial and fuel wood) in high countries are well managed so that the trees are planted after wood is removed. 50\% and 10\% are assumed for middle- and low-income countries. The income classifications are made by 12616, and 3323\$/cap, respectively.} \newline \color{red}{For the future, in 2050 all countries' planation situation catch up with the high income countries' assumptions.} \\\hline 
-Assumption012-3 & scenario.gms & VRE Curtailment and storage & Assumptions related to VRE curtailment and storage. The parameters are shown in Dai et al.~\cite{RN4366}. Basically storage is needed if the share of solar exceeds 5\%.  \\\hline 
+Assumption012-3 & scenario.gms & VRE Curtailment and storage & Assumptions related to VRE curtailment and storage (\texttt{inc\_prog/030\_CurtailmentStorage.gms}). The parameters and the storage cost are selected by \texttt{VREpara} and described in Section~\ref{subsecVRETrCurSto}. Storage starts when the share of solar (and of wind with the default parameters) exceeds 3\%.  \\\hline 
 Assumption012-5 & scenario.gms \newline inc\_prog/030\_EneModelload.gms & Energy model loading assumption &  The energy system model (energy statistics information) is incorporated. The method is fully described in Fujimori et al.(2019)~\cite{RN4425}. For the IEA Energy balance table implementation, from 2007 to 2019 are used. 2006 is the special year which has new stock and many model parameters can change and thus to avoid too much jump in 2006, the IEA Energy Balance starts from 2007. Currently, the CCS rates are not fully taken into account (July, 2020). \\\hline 
 Assumption013 & scenario.gms \newline /inc\_prog/030\_basescenario.gms & TFP and other related assumptions & Labor force and capital stock assignment to parameters and TFC assumptions.  \\\hline 
 Assumption013-1 & scenario.gms \newline ../inc\_prog/ \newline ResourceAssumptionVRE.gms & Variable renewable energy supply cost and capacity & VRE renewable energy potential and cost curve is assumed. Basically, there are 5 grades to cut the supply curves and we compare the previous year's production level with these curves and determine the production cost. The curve information is from Silva et al. (2016)~\cite{RN4380}. \\\hline 
@@ -5956,6 +6029,7 @@ BLCcost & Blue carbon net cost case (low $\sim$18, med $\sim$43, high $\sim$100 
 BLCcap & Enforce cumulative-capacity cap on blue carbon (asymptotes to lost-carbon stock) & on, off & on \\ \hline
 DACCSlink & Clamp token DACCS storage when geological CCS is unavailable & on, off & on \\ \hline
 DACCSStoCapNoCCS & Token DACCS storage cap when no geological CCS (MtCO2) & numeric & 1 \\ \hline
+VREpara & Parameters of the curtailment and storage functions and the storage cost (estimated from AIM/Technology, or those of 2015) & AIMTech2026, RDLC2015 & AIMTech2026 \\ \hline
 \end{longtable}
 
 \section{Impact, adaptation and vulnerability scenario (IAVass)}
