@@ -3915,7 +3915,7 @@ Assumption021 & scenario.gms & Intermediate input coefficient change & Steel int
 Assumption021-1 & scenario.gms & Long-term trade share changes & There are three main assumptions on long-term trade function shift. \newline -~For biofuel and raw biomass, the trade and domestic share for both of import and export are eventually equal (determined by price) and thus 30 years later after trade occurs, the parameter shifted. \\\hline 
 Assumption021-2 & scenario.gms & Trade tariff and export tax assumption change & Trade tariff and export tax rates changes. These are coming from socioeconomic assumptions. \\\hline 
 Assumption022 & scenario.gms \newline inc\_prog/030\_CGEBoundary \newline Assumption.gms & CGE boundary conditions & Specification of total primary factor inputs, foreign direct investment, CPI, exchange rates, governmental consumption, governmental saving. Some of them are initial value and rest are fixed values for the model. \\\hline 
-Assumption023 & scenario.gms & World trade price for national model & World trade price for national model, if there are global scenario named \%SCENAME\%\_\%Global4National\%, the corresponding world price is used for national model. \\\hline 
+Assumption023 & scenario.gms & World trade price for national model & World trade price for national model. Without global results the import and export prices of the country follow its production price. When the combined results of a global run (cbnal) are in the same output directory, they follow the change of the world prices of that run relative to the base year instead (the run of climate policy \%Global4National\%, or the global BaU when that run is missing; the world price is interpolated linearly between the years of the global run, which has results every five years after 2030, and kept at its last year after the run ends); the price levels of the global run are not used, because its world prices of energy and main agricultural goods are in 1000\$ per toe or ton. \\\hline 
 Assumption024 & scenario.gms & Transfer & Income (property and labor compensation) transfer assumptions of which increases are in line with GDP growth. \\\hline 
 Assumption024-3 & scenario.gms \newline /inc\_prog/020\_foodwaste.gms & Food waste assumption & The food waste assumption is made. As stated in the socioeconomic\_assumptiong.gms there are two options whether the scenario considers SDG target to halve the food waste generated from consumption process.  \\\hline 
 Assumption025 & scenario.gms \newline /inc\_prog/030\_hydrogen.gms & Hydrogen implementation & Hydrogen implementation. The way how hydrogen related industries are occurred is similar to bioenergy related industries. \\\hline 
@@ -5850,7 +5850,7 @@ AGRPRI & Carbon pricing applied to non-CO2 agricultural emissions & on, off & on
 CurPolby2030 & Apply current-policy-equivalent carbon price between 2025 and 2030 & on, off & off \\ \hline
 CurPolAfter2030 & Treatment of current policy carbon price after 2030 & Continue2030, Phaseout, off & off \\ \hline
 CarPrcConv & Convergence year for the regional carbon price gap & 2035--2100 & 2035 \\ \hline
-Global4National & Global model scenario to take world prices from & 26W\_SPACO2, off, etc. & 26W\_SPACO2 \\ \hline
+Global4National & Climate policy of the global run whose world prices (change from the base year) the national model follows; the global BaU is used when that run is missing & off, BaU, a climate policy name & the climate policy of the run (\%CLP\%) \\ \hline
 \end{longtable}
 
 \subsection{Carbon tax}
